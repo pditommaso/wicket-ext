@@ -1,15 +1,17 @@
 package org.wicketstuff.extjs;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class ExtMethod implements Serializable {
 	
 	private String method;
-	private Object[] params;
+	private Collection<Object> params;
 	
 	public ExtMethod( String method, Object ... params ) { 
 		this.method = method;
-		this.params = params;
+		this.params = Arrays.asList(params);
 	}
 
 	@Override

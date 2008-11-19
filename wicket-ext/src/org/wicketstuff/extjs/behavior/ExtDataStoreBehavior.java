@@ -1,21 +1,20 @@
 package org.wicketstuff.extjs.behavior;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IRequestTarget;
 import org.apache.wicket.RequestCycle;
-import org.apache.wicket.Response;
-import org.apache.wicket.extensions.ajax.markup.html.autocomplete.IAutoCompleteRenderer;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wicketstuff.extjs.Config;
-import org.wicketstuff.extjs.ExtArray;
-import org.wicketstuff.extjs.data.IExtDataSource;
+import org.wicketstuff.extjs.data.ExtDataSource;
+import org.wicketstuff.extjs.data.ExtXmlReader;
 import org.wicketstuff.extjs.data.Store;
-import org.wicketstuff.extjs.data.XmlReader;
+import org.wicketstuff.extjs.util.ObjectMapper;
+import org.wicketstuff.extjs.util.XmlRenderer;
 
 /**
  * Behavior providing datasource capabilities to EXT components 
@@ -23,32 +22,35 @@ import org.wicketstuff.extjs.data.XmlReader;
  * @author Paolo Di Tommaso
  *
  */
-public abstract class ExtDataStoreBehavior extends ExtAbstractBehavior implements IExtDataSource {
+public abstract class ExtDataStoreBehavior<T> extends ExtAbstractBehavior implements ExtDataSource {
 
 	private static final Logger log = LoggerFactory.getLogger(ExtDataStoreBehavior.class);
 	
-	private XmlRenderer responseRenderer;
-	private IChoiceRenderer choiceRenderer;
+	private XmlRenderer<T> response;
 
-	private XmlReader xmlReader;
+	private ExtXmlReader extXmlReader;
 	private Store store;
 	
 	private static final String QUERY_PARAM = "q";
+
+	private ObjectMapper<T> mapper;
 	
 	
 	/* TODO instead of IChoiceRenderer we should use a more adeguate render interface */
-	public ExtDataStoreBehavior(IChoiceRenderer renderer) {
-		responseRenderer = new XmlRenderer();
-  		choiceRenderer = renderer;
+	public ExtDataStoreBehavior(ObjectMapper<T> mapper) {
+		this.mapper = mapper;
+		this.response = new XmlRenderer<T>(mapper);
 	}
 	
-	public Store getStore() {
-		
+	final public Store getStore() {
 		if( store == null ) { 
 			store = createStore();
 		}
-		
 		return store;
+	}
+	
+	public void setStore( Store store ) { 
+		this.store = store;
 	}
 	
 	public String getQueryParam() { 
@@ -60,9 +62,14 @@ public abstract class ExtDataStoreBehavior extends ExtAbstractBehavior implement
 		/* 
 		 * record definition for reader 
 		 */
-		ExtArray record = new ExtArray (  
-				new Config("name", "display") 
-		) ;
+		Map<String,Object> sample = mapper.mapObject(null, 0);
+		
+		Object[] record = new Object[sample.size()];
+		int i=0;
+		Iterator<String> iterator = sample.keySet().iterator();
+		while( iterator.hasNext() ) { 
+			record[i++] = new Config("name", iterator.next() );
+		}
 		
 		/*
 		 * Xml reader to fetch the response data 
@@ -71,7 +78,7 @@ public abstract class ExtDataStoreBehavior extends ExtAbstractBehavior implement
 		Config config = new Config()	
 			.set("record","item")
 			.set("id","id");
-		xmlReader = new XmlReader( config, record );
+		extXmlReader = new ExtXmlReader( config, record );
 		
 		
 		/*
@@ -79,7 +86,7 @@ public abstract class ExtDataStoreBehavior extends ExtAbstractBehavior implement
 		 */
 		Config storeConfig = new Config()
 			.set( "url", getCallbackUrl() )
-			.set( "reader", xmlReader );
+			.set( "reader", extXmlReader );
 		return new Store( storeConfig );
 	}
 
@@ -107,14 +114,14 @@ public abstract class ExtDataStoreBehavior extends ExtAbstractBehavior implement
 				webResponse.setHeader("Cache-Control", "no-cache, must-revalidate");
 				webResponse.setHeader("Pragma", "no-cache");
 
-				Iterator<?> choices = getChoices(input);
-				responseRenderer.renderHeader(webResponse);
+				Iterator<T> choices = getChoices(input);
+				response.renderHeader(webResponse);
 				while (choices.hasNext())
 				{
-					final Object item = choices.next();
-					responseRenderer.render(item, webResponse, input);
+					final T item = choices.next();
+					response.render(item, webResponse, input);
 				}
-				responseRenderer.renderFooter(webResponse);
+				response.renderFooter(webResponse);
 			}
 
 			public void detach(RequestCycle requestCycle)
@@ -127,32 +134,9 @@ public abstract class ExtDataStoreBehavior extends ExtAbstractBehavior implement
 	}	
 
 	
-	abstract protected Iterator<?> getChoices(String input);
+	abstract protected Iterator<T> getChoices(String input);
 
 
-	class XmlRenderer implements IAutoCompleteRenderer {
-
-		private int index; 
-		
-		public void render(Object object, Response response, String criteria) {
-			StringBuilder result = new StringBuilder()
-					.append("<item>")
-					.append("<id>") .append( choiceRenderer.getIdValue(object, index++)) .append("</id>")
-					.append("<display>") .append( choiceRenderer.getDisplayValue(object)) .append("</display>")
-					.append("</item>");
-			response.write( result );
-		}
-
-		public void renderHeader(Response response) {
-			index = 0;
-			response.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-			response.write("<dataset>");
-		}
-		
-		public void renderFooter(Response response) {
-			response.write("</dataset>");
-		}
-	}
 	
 	@Override
 	protected CharSequence onDomReady() { 

@@ -2,7 +2,8 @@ package org.wicketstuff.extjs.data;
 
 
 
-public interface IExtDataSource {
+
+public interface ExtDataSource {
 
 	Store getStore();
 	

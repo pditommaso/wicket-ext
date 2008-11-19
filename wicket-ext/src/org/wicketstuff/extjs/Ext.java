@@ -16,6 +16,10 @@ public class Ext {
 		ResourceReference EXT_BASE = new ResourceReference(Ext.class,"adapter/ext/ext-base.js");
 	}
 	
+	public interface Images { 
+		ResourceReference BLANK = new ResourceReference(Ext.class,"s.gif");
+	}
+	
 	public interface Css {
 		ResourceReference EXT_ALL = new ResourceReference(Ext.class,"resources/css/ext-all.css");
 	}
@@ -45,9 +49,13 @@ public class Ext {
 	}
 	
 	
-	public static CharSequence serialize( Object ... items ) { 
-		if( items == null ) { return ""; }
-		return serialize(Arrays.asList(items));
+	public static CharSequence serialize( Object[] items ) { 
+		StringBuilder result = new StringBuilder();
+		result.append("[");
+		result.append( serialize(Arrays.asList(items) ));
+		result.append("]");
+		
+		return result;
 	}
 	
 	public static CharSequence serialize( Collection<?> items ) { 

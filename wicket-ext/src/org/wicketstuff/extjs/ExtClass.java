@@ -1,12 +1,14 @@
 package org.wicketstuff.extjs;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Collection;
 
 
 public class ExtClass implements Serializable {
 
 	private String className;
-	private Object[] options = {};
+	private Collection<Object> options;
 	
 	public ExtClass( String className ) { 
 		this.className = className;
@@ -14,16 +16,16 @@ public class ExtClass implements Serializable {
 
 	public ExtClass( String className, Object... options ) { 
 		this.className = className;
-		this.options = options;
+		this.options = Arrays.asList(options);
 	}
 	
 	public ExtClass setOptions( Object[] options ) { 
-		this.options = options;
+		this.options = Arrays.asList(options);
 		return this;
 	}
 	
 	public Object[] getOptions() { 
-		return options;
+		return options.toArray() ;
 	}
 	
 	@Override

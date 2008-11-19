@@ -2,6 +2,7 @@ package org.wicketstuff.extjs.behavior;
 
 import org.wicketstuff.extjs.Config;
 import org.wicketstuff.extjs.ExtClass;
+import org.wicketstuff.extjs.form.ExtComponent;
 
 /**
  * Base behavior to add to Wicket form component the equivalent Ext behavior 
@@ -9,18 +10,18 @@ import org.wicketstuff.extjs.ExtClass;
  * @author Paolo Di Tommaso
  *
  */
-public class ExtFormComponentBehavior extends ExtAbstractBehavior {
+public class ExtComponentBehavior extends ExtAbstractBehavior {
 
 	private String extClassName;
 
 	private Config defaultOptions = new Config();
 	
 	
-	public ExtFormComponentBehavior( String theFullyQualifiedExtClassName ) { 
+	public ExtComponentBehavior( String theFullyQualifiedExtClassName ) { 
 		this.extClassName = theFullyQualifiedExtClassName;
 	}
 
-	public ExtFormComponentBehavior( String theFullyQualifiedExtClassName, Config options ) { 
+	public ExtComponentBehavior( String theFullyQualifiedExtClassName, Config options ) { 
 		this.extClassName = theFullyQualifiedExtClassName;
 		this.defaultOptions = options;
 	}
@@ -41,7 +42,12 @@ public class ExtFormComponentBehavior extends ExtAbstractBehavior {
 	
 	@Override
 	public CharSequence onDomReady() { 
-		ExtClass ext = create(new Config(defaultOptions));
+		Config options = new Config(defaultOptions);
+		if( getComponent() instanceof ExtComponent ) { 
+			ExtComponent ext = (ExtComponent) getComponent();
+			options.putAll(ext.getOptions());
+		}
+		ExtClass ext = create(options);
 		return ext != null ? ext.toString() : null;
 		
 	}
