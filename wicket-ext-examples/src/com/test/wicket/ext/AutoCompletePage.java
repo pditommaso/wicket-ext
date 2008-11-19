@@ -11,10 +11,10 @@ public class AutoCompletePage extends WebPage {
 
 	public AutoCompletePage() { 
 		
-		add( new ExtAutoCompleteField("autocomplete") {
+		add( new ExtAutoCompleteField<String>("autocomplete") {
 
 			@Override
-			protected Iterator<?> getChoices(String input) {
+			protected Iterator<String> getChoices(String input) {
 				return Arrays.asList("Pippo", "Pluto", "Paperino").iterator();
 			} 
 			
@@ -22,6 +22,7 @@ public class AutoCompletePage extends WebPage {
 			protected void onSelect(AjaxRequestTarget target, String key ) { 
 				System.out.println( ">>>>>>> " + key );
 			}
+
 		} );
 
 	}
