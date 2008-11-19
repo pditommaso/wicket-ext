@@ -1,18 +1,15 @@
 package org.wicketstuff.extjs.behavior;
 
 import org.wicketstuff.extjs.Config;
-import org.wicketstuff.extjs.ExtClass;
 
-public class ExtTimeFieldBehavior extends ExtFormComponentBehavior{
+
+public class ExtTimeFieldBehavior extends ExtFieldBehavior{
 
 	public ExtTimeFieldBehavior() { 
 		super("Ext.form.TimeField");
 	}
 
-	@Override
-	public ExtClass create( Config config ) { 
-		config.set("applyTo",getComponent().getMarkupId());
-		return super.create(config);
+	public ExtTimeFieldBehavior(Config options) { 
+		super("Ext.form.TimeField", options);
 	}
-	
 }

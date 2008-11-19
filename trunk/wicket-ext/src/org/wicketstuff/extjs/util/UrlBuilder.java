@@ -7,7 +7,7 @@ import java.util.Map;
 public class UrlBuilder implements Serializable {
 
 	CharSequence url;
-	Map<String,String> params = new HashMap<String, String>();
+	Map<String,Object> params = new HashMap<String, Object>();
 	
 	public UrlBuilder( String url ) { 
 		this.url = url;
@@ -23,8 +23,8 @@ public class UrlBuilder implements Serializable {
 		return this;
 	}
 	
-	public UrlBuilder append( Map<String,String> params ) { 
-		params.putAll(params);
+	public UrlBuilder append( Map<String,Object> params ) { 
+		this.params.putAll(params);
 		return this;
 	}
 	
@@ -34,7 +34,7 @@ public class UrlBuilder implements Serializable {
 			.append("'") .append(url) .append("'");
 		
 		if( params != null ) { 
-			for( Map.Entry<String, String> item: params.entrySet() ) { 
+			for( Map.Entry<String, Object> item: params.entrySet() ) { 
 				builder 
 				.append("+'&")
 				.append(item.getKey())

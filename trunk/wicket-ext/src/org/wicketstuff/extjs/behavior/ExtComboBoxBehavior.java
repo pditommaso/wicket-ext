@@ -3,12 +3,15 @@ package org.wicketstuff.extjs.behavior;
 import org.wicketstuff.extjs.Config;
 import org.wicketstuff.extjs.ExtClass;
 
-@SuppressWarnings("serial")
-public class ExtComboBoxBehavior extends ExtFormComponentBehavior {
+public class ExtComboBoxBehavior extends ExtComponentBehavior {
 
 	
 	public ExtComboBoxBehavior() { 
 		super("Ext.form.ComboBox");
+	}
+
+	public ExtComboBoxBehavior(Config options) { 
+		super("Ext.form.ComboBox", options);
 	}
 
 	@Override

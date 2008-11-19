@@ -34,6 +34,17 @@ public class Config  implements Serializable {
 		map.put(name, value);
 		return this;
 	}
+
+	public Config put(String name, Object value ) { 
+		map.put(name, value);
+		return this;
+	}
+	
+	
+	public Config putAll( Config config ) { 
+		map.putAll(config.map);
+		return this;
+	}
 	
 	@Override
 	public String toString() { 

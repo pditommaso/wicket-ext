@@ -4,7 +4,7 @@ import org.apache.wicket.Component;
 import org.wicketstuff.extjs.Config;
 import org.wicketstuff.extjs.ExtClass;
 
-public class ExtPanelBehavior extends ExtFormComponentBehavior {
+public class ExtPanelBehavior extends ExtComponentBehavior {
 
 
 	private String wrapperId; 
@@ -14,6 +14,11 @@ public class ExtPanelBehavior extends ExtFormComponentBehavior {
 		super("Ext.Panel");
 	}
 
+	public ExtPanelBehavior(Config options) {
+		super("Ext.Panel", options);
+	}
+	
+	
 	@Override
 	public void onBind() { 
 		super.onBind();

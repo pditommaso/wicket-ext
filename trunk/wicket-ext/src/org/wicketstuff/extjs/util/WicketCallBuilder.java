@@ -12,7 +12,7 @@ public class WicketCallBuilder extends UrlBuilder {
 	
 	@Override
 	public String toString() { 
-		return String.format( "wicketAjaxGet(%s,null,null);", super.toString() );
+		return String.format( "wicketAjaxGet(%s);", super.toString() );
 	}
 	
 }

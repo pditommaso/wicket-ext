@@ -1,19 +1,16 @@
 package org.wicketstuff.extjs.behavior;
 
 import org.wicketstuff.extjs.Config;
-import org.wicketstuff.extjs.ExtClass;
 
-public class ExtTextFieldBehavior extends ExtFormComponentBehavior {
+
+public class ExtTextFieldBehavior extends ExtFieldBehavior {
 
 	public ExtTextFieldBehavior() {
 		super("Ext.form.TextField");
 	}
 
-	
-	@Override
-	public ExtClass create( Config config ) { 
-		config.set("applyTo",getComponent().getMarkupId());
-		return super.create(config);
+	public ExtTextFieldBehavior(Config options) {
+		super("Ext.form.TextField", options);
 	}
 	
 }
