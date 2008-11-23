@@ -8,6 +8,12 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.behavior.HeaderContributor;
 
+/**
+ * Ext helper class. Provides common utility methods
+ * 
+ * @author Paolo Di Tommaso
+ *
+ */
 public class Ext {
 
 	public interface Js {

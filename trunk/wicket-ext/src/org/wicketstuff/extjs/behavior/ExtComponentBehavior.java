@@ -41,7 +41,7 @@ public class ExtComponentBehavior extends ExtAbstractBehavior {
 	}
 	
 	@Override
-	public CharSequence onDomReady() { 
+	protected CharSequence onDomReady() { 
 		Config options = new Config(defaultOptions);
 		if( getComponent() instanceof ExtComponent ) { 
 			ExtComponent ext = (ExtComponent) getComponent();

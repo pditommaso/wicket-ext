@@ -5,7 +5,7 @@ import java.io.Serializable;
 import org.apache.wicket.util.string.Strings;
 
 /**
- * JavaScript anonymous function wrapper 
+ * Wrapper class to handle an anonymous JavaScript function
  * 
  * @author Paolo Di Tommaso
  *
