@@ -1,9 +1,15 @@
 package org.wicketstuff.extjs;
 
+import java.io.Serializable;
 import java.util.Map;
 
-
-public class ExtAjax {
+/**
+ * Wrapper class to handle Ext <code>Ext.Ajax.request</code> method
+ * 
+ * @author Paolo Di Tommaso
+ *
+ */
+public class ExtAjax implements Serializable {
 	
 	public static String request( String url ) { 
 		Config options = new Config() .set("url", url);

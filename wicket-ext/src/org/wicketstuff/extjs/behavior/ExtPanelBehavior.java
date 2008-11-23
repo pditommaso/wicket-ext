@@ -17,7 +17,7 @@ public class ExtPanelBehavior extends ExtComponentBehavior {
 	public ExtPanelBehavior(Config options) {
 		super("Ext.Panel", options);
 	}
-	
+
 	
 	@Override
 	public void onBind() { 
@@ -39,10 +39,10 @@ public class ExtPanelBehavior extends ExtComponentBehavior {
 		super.onComponentRendered();
 		getComponent().getResponse().write("</div>");
 	}
-	
+
 	@Override
 	protected ExtClass create( Config options ) { 
-		options.set("renderTo", wrapperId);
+		options.set("applyTo", wrapperId);
 		options.set("contentEl", getComponent().getMarkupId() );
 		options.set("title", "Hello there!");
 		options.set("width", 400);

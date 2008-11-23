@@ -4,7 +4,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * Wrapper class to manage easily JavaScript configuration objects to be provided to Ext classes 
+ * 
+ * @author Paolo Di Tommaso
+ *
+ */
 public class Config  implements Serializable {
 
 	Map<String,Object> map = new HashMap<String, Object>();

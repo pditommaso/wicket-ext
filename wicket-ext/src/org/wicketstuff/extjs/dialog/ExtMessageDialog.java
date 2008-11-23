@@ -48,13 +48,12 @@ public class ExtMessageDialog extends WebMarkupContainer {
 	
 	
 	/**
-	 * Callback handler on message box button click 
+	 * Callback handler on message box button click. Ovveride this method to intercept the message button events
 	 * 
 	 * @param pressedButton
 	 */
 	protected void onClick(final String pressedButton) {
 		
-		System.out.print(">>>>>>>>>> " + pressedButton);
 	}
 
 	public void confim( AjaxRequestTarget target ) { 
@@ -70,11 +69,11 @@ public class ExtMessageDialog extends WebMarkupContainer {
 	}
 	
 	public void prompt( AjaxRequestTarget target ) { 
-		
+		//TODO  
 	}
 	
 	public void alert( AjaxRequestTarget target ) { 
-		
+		//TODO
 	}
 
 }

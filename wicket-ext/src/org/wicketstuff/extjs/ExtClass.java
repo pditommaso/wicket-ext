@@ -4,7 +4,12 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 
-
+/**
+ * Wrapper class to handle a Ext class instance
+ * 
+ * @author Paolo Di Tommaso
+ *
+ */
 public class ExtClass implements Serializable {
 
 	private String className;
