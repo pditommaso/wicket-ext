@@ -36,7 +36,6 @@ public abstract class ExtDataStoreBehavior<T> extends ExtAbstractBehavior implem
 	private ObjectMapper<T> mapper;
 	
 	
-	/* TODO instead of IChoiceRenderer we should use a more adeguate render interface */
 	public ExtDataStoreBehavior(ObjectMapper<T> mapper) {
 		this.mapper = mapper;
 		this.response = new XmlRenderer<T>(mapper);
@@ -64,11 +63,14 @@ public abstract class ExtDataStoreBehavior<T> extends ExtAbstractBehavior implem
 		 */
 		Map<String,Object> sample = mapper.mapObject(null, 0);
 		
-		Object[] record = new Object[sample.size()];
-		int i=0;
-		Iterator<String> iterator = sample.keySet().iterator();
-		while( iterator.hasNext() ) { 
-			record[i++] = new Config("name", iterator.next() );
+		Object[] record = {};
+		if( sample != null ) { 
+			record = new Object[ sample.size() ];
+			int i=0;
+			Iterator<String> iterator = sample.keySet().iterator();
+			while( iterator.hasNext() ) { 
+				record[i++] = new Config("name", iterator.next() );
+			}
 		}
 		
 		/*
