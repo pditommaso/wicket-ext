@@ -1,7 +1,4 @@
-package org.wicketstuff.extjs.util;
-
-import java.util.HashMap;
-import java.util.Map;
+package org.wicketstuff.extjs.data;
 
 import org.apache.wicket.util.lang.PropertyResolver;
 
@@ -24,8 +21,8 @@ public class SimpleObjectMapper<T> implements ObjectMapper<T> {
 		this.attributes = attributes;
 	}
 	
-	public Map<String, Object> mapObject(T object, int index) {
-		Map<String,Object> result = new HashMap<String, Object>();
+	public ObjectMap mapObject(T object, Integer index) {
+		ObjectMap result = new ObjectMap();
 		for( String name : attributes ) { 
 			if( object != null ) { 
 				result.put( name, PropertyResolver.getValue(name, object) );

@@ -3,7 +3,7 @@ package org.wicketstuff.extjs.behavior;
 import org.wicketstuff.extjs.Config;
 
 
-public class ExtTimeFieldBehavior extends ExtFieldBehavior{
+public class ExtTimeFieldBehavior extends ExtComponentBehavior {
 
 	public ExtTimeFieldBehavior() { 
 		super("Ext.form.TimeField");

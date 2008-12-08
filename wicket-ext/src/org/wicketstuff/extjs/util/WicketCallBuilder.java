@@ -1,5 +1,11 @@
 package org.wicketstuff.extjs.util;
 
+/**
+ * Wrapper to handle <code>wicketAjaxGet</code> function
+ * 
+ * @author Paolo Di Tommaso
+ *
+ */
 public class WicketCallBuilder extends UrlBuilder {
 
 	public WicketCallBuilder(CharSequence url) {

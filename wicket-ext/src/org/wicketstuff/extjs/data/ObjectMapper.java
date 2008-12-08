@@ -1,4 +1,4 @@
-package org.wicketstuff.extjs.util;
+package org.wicketstuff.extjs.data;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -20,6 +20,6 @@ public interface ObjectMapper<T> extends Serializable {
 	 * @param index the index count if invoked in an iteration
 	 * @return the mapped object 
 	 */
-	Map<String,Object> mapObject( T object, int index  );
+	ObjectMap mapObject( T object, Integer index  );
 	
 }

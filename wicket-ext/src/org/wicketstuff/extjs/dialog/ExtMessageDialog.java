@@ -1,12 +1,9 @@
 package org.wicketstuff.extjs.dialog;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.model.IModel;
+import org.wicketstuff.extjs.Config;
 import org.wicketstuff.extjs.Ext;
-import org.wicketstuff.extjs.ExtFunction;
-import org.wicketstuff.extjs.ExtMethod;
 
 
 /**
@@ -17,63 +14,107 @@ import org.wicketstuff.extjs.ExtMethod;
  */
 public class ExtMessageDialog extends WebMarkupContainer {
 
-	private AbstractAjaxBehavior handler;
+	public static final String BTN_YES = "yes";
+	public static final String BTN_NO = "no";
+	public static final String BTN_OK = "ok";
+	public static final String BTN_CANCEL = "cancel";
+	
+	private ExtMessageBoxBehavior handler;
 
 	public ExtMessageDialog(String id) {
 		super(id);
 		init();
 	}
 	
-	public ExtMessageDialog( String id, IModel model ) { 
-		super(id,model);
-		init();
-	}
-
 	private void init() {
 		Ext.addContribution(this);
 		
-		handler = new AbstractAjaxBehavior() {
-
-			public void onRequest() {
-				String pressedButton = getComponent().getRequest().getParameter("btn");
-				onClick( pressedButton );
-			}}; 
+		handler = new ExtMessageBoxBehavior() {
+			@Override
+			public void onClick(AjaxRequestTarget target, String button, String text) { 
+				ExtMessageDialog.this.onClick(button,text);				
+			}
+		} ; 
 		add(handler);
 	}
 	
 
-	private String getCallbackUrl() { 
-		return handler.getCallbackUrl().toString();
-	}
-	
-	
 	/**
 	 * Callback handler on message box button click. Ovveride this method to intercept the message button events
 	 * 
-	 * @param pressedButton
+	 * @param pressedButton the button pressed on the dialog
+	 * @param text the entered text (only for prompt dialog)
 	 */
-	protected void onClick(final String pressedButton) {
+	protected void onClick( final String pressedButton, final String text ) {
 		
 	}
 
-	public void confim( AjaxRequestTarget target ) { 
-		ExtFunction callback = new ExtFunction("btn", "var u='"+getCallbackUrl()+"&btn='+btn; wicketAjaxGet(u,null,null);");
-		
-		ExtMethod dialog = new ExtMethod("Ext.MessageBox.confirm",
-					"Confirm",
-					"Are you sure you want to do that?",
-					callback );
+	/**
+	 * Displays a <i>Confirm</i> dialog
+	 * 
+	 * @param target the current ajax request target
+	 * @param title the dialog string title
+	 * @param message the dialog content message
+	 */
+	public void confim( AjaxRequestTarget target, String title, String message ) { 
+		Config config = new Config( MessageType.CONFIRM.config() );
+		config.put("title",title);
+		config.put("msg",message);
+		show(target,config);
+	}
+	
+	/**
+	 * Display a <i>Prompt</i> Dialog
+	 * 
+	 * @param target the current ajax request target
+	 * @param title the prompt dialog title string
+	 * @param message the prompt dialog message string
+	 */
+	public void prompt( AjaxRequestTarget target, String title, String message  ) { 
+		prompt(target,title,message,"", false);
+	}
 
-		target.appendJavascript(dialog.toString());
-		
+	/**
+	 * Display a <i>Prompt</i> Dialog
+	 * 
+	 * @param target the current ajax request target
+	 * @param title the prompt dialog title string
+	 * @param message the prompt dialog message string
+	 * @param defValue the default value displayed in the input field
+	 * @param isMultiline when <code>true</code> dialog will be display a multiline inout area
+	 */
+	public void prompt( AjaxRequestTarget target, String title, String message, String defValue, boolean isMultiline  ) { 
+		Config config = new Config( MessageType.PROMPT.config() );
+		config.put("title",title);
+		config.put("msg",message);
+		config.put("multiline", isMultiline);
+		config.put("value", defValue);
+		show(target,config);
 	}
-	
-	public void prompt( AjaxRequestTarget target ) { 
-		//TODO  
+
+	/**
+	 * Display an <i>Alert</i> Dialog
+	 * 
+	 * @param target the current ajax request target
+	 * @param title the altet dialog title string
+	 * @param message the alert dialog message string
+	 */
+	public void alert( AjaxRequestTarget target, String title, String message  ) { 
+		Config config = new Config( MessageType.ALERT.config() );
+		config.put("title",title);
+		config.put("msg",message);
+		show(target,config);
 	}
-	
-	public void alert( AjaxRequestTarget target ) { 
-		//TODO
+
+	/**
+	 * Display a configurable dialog message
+	 * 
+	 * @param target the current ajax request target
+	 * @param options configuration object, see <i>Ext</i> documentation for references
+	 */
+	public void show( AjaxRequestTarget target, Config config ) { 
+		String script = handler.dialogScript(config);
+		target.appendJavascript(script);
 	}
 
 }

@@ -93,3 +93,4 @@ initQuery: function(){
 this.doQuery(this.sep ? this.getActiveEntry() : this.getRawValue());
 }
 });
+Ext.reg('comboboxmulti',Ext.form.ComboBoxMulti); 

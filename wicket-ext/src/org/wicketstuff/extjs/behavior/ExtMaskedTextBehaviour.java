@@ -13,7 +13,7 @@ import org.wicketstuff.extjs.ExtClass;
  */
 
 
-public class ExtMaskedTextBehaviour extends ExtFieldBehavior {
+public class ExtMaskedTextBehaviour extends ExtComponentBehavior {
 	
 	String mask;
 	
@@ -24,11 +24,8 @@ public class ExtMaskedTextBehaviour extends ExtFieldBehavior {
 	
 	
 	@Override
-	public ExtClass create( Config options ) { 
-		options
-			.set("maskRe",new ExtClass("RegExp",new String(mask)));
-		
-		return super.create(options);
+	protected void onExtConfig( Config options ) { 
+		options.set("maskRe",new ExtClass("RegExp",new String(mask)));
 	}
 	
 }

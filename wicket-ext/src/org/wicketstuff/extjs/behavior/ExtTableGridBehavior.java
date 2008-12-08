@@ -19,17 +19,12 @@ public class ExtTableGridBehavior extends ExtAbstractBehavior {
 	
 	
 	@Override
-	public CharSequence onDomReady() {
+	public CharSequence renderExtScript() {
 		Config options = new Config("stripeRows",true);
 		String id = getComponent().getMarkupId();
 		ExtClass grid = new ExtClass("Ext.grid.TableGrid", id, options);
-		
-		return String.format("var grid=%s; grid.render();", grid);
+		return String.format("%s.render();", grid);
 	}
 
 
-	public void onRequest() {
-		// TODO Auto-generated method stub
-		
-	}
 }

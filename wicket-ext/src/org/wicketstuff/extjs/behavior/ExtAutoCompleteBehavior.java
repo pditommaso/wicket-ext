@@ -5,15 +5,16 @@ import java.util.Map;
 
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.util.template.TextTemplateHeaderContributor;
 import org.wicketstuff.extjs.Config;
 import org.wicketstuff.extjs.Ext;
-import org.wicketstuff.extjs.ExtClass;
 import org.wicketstuff.extjs.ExtFunction;
 import org.wicketstuff.extjs.XTemplate;
-import org.wicketstuff.extjs.data.ExtDataSource;
+import org.wicketstuff.extjs.data.ExtDataLink;
 import org.wicketstuff.extjs.util.WicketCallBuilder;
 
-public abstract class ExtAutoCompleteBehavior extends ExtFieldBehavior {
+public abstract class ExtAutoCompleteBehavior extends ExtComponentBehavior {
 
 
 	private static final String QUERY_PARAM = "key";
@@ -29,10 +30,23 @@ public abstract class ExtAutoCompleteBehavior extends ExtFieldBehavior {
 			"if (curnt != this.getValue()){ this.fireEvent('change', this, this.getValue(), curnt); } "+
 			"}; ";
 
-	private ExtDataSource data;
+	private ExtDataLink link;
 	
 	private XTemplate template;
 		
+	
+	{
+		/* default component configuration */
+		defaultOptions.set("typeAhead", false);
+		defaultOptions.set("minChars", 1);
+		defaultOptions.set("hideTrigger", true);
+		defaultOptions.set("loadingText", "Loading...");
+		defaultOptions.set("forceSelection", true);  // True to restrict the selected value to one of the values in the list, false to allow the user to set arbitrary text into the field (defaults to false) 
+		defaultOptions.set("selectOnFocus",true);	 // True to select any existing text in the field immediately on focus. Only applies when editable = true (defaults to false) 	
+		defaultOptions.set("pageSize", 0);			 // If greater than 0, a paging toolbar is displayed in the footer of the dropdown list and the filter queries will execute with page start and limit parameters. Only applies when mode = 'remote' (defaults to 0) 
+
+	}
+	
 	public ExtAutoCompleteBehavior() {
 			super("Ext.form.ComboBox");
 	}
@@ -41,22 +55,22 @@ public abstract class ExtAutoCompleteBehavior extends ExtFieldBehavior {
 		super("Ext.form.ComboBox", options);
 	}
 	
-	
 	@Override
 	public void onBind() { 
 		super.onBind();
-		//getComponent().add( HeaderContributor.forJavaScript(ExtAutoCompleteBehavior.class, "autocomplete.js") );
+		/* Fix  for component positioning on IE 
+		 *	See https://extjs.com/forum/showthread.php?p=204826
+		 */
+		getComponent().add( TextTemplateHeaderContributor.forJavaScript(ExtAutoCompleteBehavior.class, "triggerfield_patch.js", new Model()) );
 	}
-
-	/* 
+	
+	
+	/** 
 	 * This ajax behaviour handle the drop-down selection change
 	 */
 	@Override
-	public void onRequest() {
+	final public void onEvent(AjaxRequestTarget target) {
 		String key = RequestCycle.get().getRequest().getParameter(QUERY_PARAM);
-
-		AjaxRequestTarget target = new AjaxRequestTarget(getComponent().getPage());
-		RequestCycle.get().setRequestTarget(target);
 		onSelect( target, key );
 	}
 	
@@ -64,47 +78,36 @@ public abstract class ExtAutoCompleteBehavior extends ExtFieldBehavior {
 
 
 	@Override
-	public ExtClass create( Config config ) { 
+	protected void onExtConfig( Config config ) { 
 		String url = getCallbackUrl().toString();
 		
 		Map<String,Object> params = new HashMap<String, Object>();
 		params.put(QUERY_PARAM, Ext.literal("record.id") );
-//		String ajax = ExtAjax.request( url, params );
 		WicketCallBuilder ajax = new WicketCallBuilder(url);
 		ajax.append(params);
 		
 		
-		Config options = new Config()
-			.set("displayField", "display")
-			.set("typeAhead", false)
-			.set("loadingText", "Loading...")
-			.set("forceSelection", true) // True to restrict the selected value to one of the values in the list, false to allow the user to set arbitrary text into the field (defaults to false) 
-			.set("selectOnFocus",true)	 // True to select any existing text in the field immediately on focus. Only applies when editable = true (defaults to false) 	
-			.set("pageSize", 0)			 // If greater than 0, a paging toolbar is displayed in the footer of the dropdown list and the filter queries will execute with page start and limit parameters. Only applies when mode = 'remote' (defaults to 0) 
-			.set("minChars", 1)
-			.set("hideTrigger", false)
-			.set("itemSelector","div.search-item")
-			.set("onSelect", new ExtFunction("record,index", ON_SELECT_DEFAULT + ajax ) );
+		config.set("displayField", "display");
+		config.set("itemSelector","div.search-item");
+		config.set("onSelect", new ExtFunction("record,index", ON_SELECT_DEFAULT + ajax ) );
 
-		if( data != null ) { 
-			options.set("store", data.getStore() );
-			options.set("queryParam", data.getQueryParam());
+		if( link != null ) { 
+			config.set("store", link.getStore() );
+			config.set("queryParam", link.getQueryParam());
 		}
 		
 		if( template != null ) { 
-			options.set("tpl", getTemplate() );
+			config.set("tpl", getTemplate() );
 		}
 		
-		options.putAll(config);
-		return super.create(options);
-	}
-		
-	public ExtDataSource getData() {
-		return data;
 	}
 	
-	public void setData(ExtDataSource data) {
-		this.data = data;
+	public ExtDataLink getData() {
+		return link;
+	}
+	
+	public void setData(ExtDataLink link) {
+		this.link = link;
 	}
 	
 	public void setTemplate(XTemplate template) {

@@ -15,6 +15,8 @@ public class ExtClass implements Serializable {
 	private String className;
 	private Collection<Object> options;
 	
+	private String varName;
+	
 	public ExtClass( String className ) { 
 		this.className = className;
 	}
@@ -35,13 +37,24 @@ public class ExtClass implements Serializable {
 	
 	@Override
 	public String toString() { 
+		if( varName != null ) { 
+			return varName;
+		}
+	
+		return newInstance().toString();
+	}
+	
+	public CharSequence newInstance() { 
 		StringBuilder result = new StringBuilder();
 		result.append("new ") .append(className) .append("(");
-		
 		result.append(Ext.serialize(options));
-
 		result.append(")");
-		return result.toString();
+		return result;
+	}
+	
+	public CharSequence newInstance( String varName ) { 
+		this.varName = varName;
+		return String.format("var %s=%s;", varName, newInstance());
 	}
 	
 }
