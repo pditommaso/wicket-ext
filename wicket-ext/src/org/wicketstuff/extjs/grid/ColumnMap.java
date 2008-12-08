@@ -77,7 +77,7 @@ public class ColumnMap extends Config {
 		return this;
 	}
 
-	public ColumnMap setTooltip( boolean tooltip) { 
+	public ColumnMap setTooltip( String tooltip) { 
 		set("tooltip", tooltip);
 		return this;
 	}
