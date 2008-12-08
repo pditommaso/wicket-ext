@@ -1,13 +1,11 @@
 package com.test.wicket.ext;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.wicket.markup.html.WebPage;
-import org.wicketstuff.extjs.grid.ColumnModel;
+import org.wicketstuff.extjs.grid.ColumnMap;
 import org.wicketstuff.extjs.grid.ExtGridPanel;
 
 public class GridPanelPage extends WebPage {
@@ -23,6 +21,30 @@ public class GridPanelPage extends WebPage {
 			beta = a2;
 			gamma = a3;
 		}
+
+		public String getAlpha() {
+			return alpha;
+		}
+
+		public void setAlpha(String alpha) {
+			this.alpha = alpha;
+		}
+
+		public String getBeta() {
+			return beta;
+		}
+
+		public void setBeta(String beta) {
+			this.beta = beta;
+		}
+
+		public String getGamma() {
+			return gamma;
+		}
+
+		public void setGamma(String gamma) {
+			this.gamma = gamma;
+		}
 	}
 	
 	
@@ -30,36 +52,30 @@ public class GridPanelPage extends WebPage {
 		
 		add( new ExtGridPanel<SimpleBean> ("grid") {
 
-			@Override
-			protected Map<String, Object> mapObject(SimpleBean object, int index) {
-				Map<String,Object> map = new HashMap<String, Object>();
-				map.put("col1",null);
-				map.put("col2",null);
-				map.put("col3",null);
-				if( object != null ) { 
-					map.put("col1",object.alpha);
-					map.put("col2",object.beta);
-					map.put("col3",object.gamma);
-				}
-				return map;
-			}
 
 			@Override
-			protected Iterator<SimpleBean> onLoad() {
+			protected ColumnMap[] getColumns() {
+				ColumnMap col1 = new ColumnMap("alpha", "Colonna 1");
+				ColumnMap col2 = new ColumnMap("beta", "Colonna 2");
+				ColumnMap col3 = new ColumnMap("gamma", "Colonna 3");
+
+				return new ColumnMap[] { col1, col2, col3 };
+			}
+
+			public Long totalRecords() { return 300L; }
+			
+			@Override
+			public Iterator<SimpleBean> iterator(String filter, String direction, Integer start, Integer count) {
 				List<SimpleBean> result = new ArrayList<SimpleBean>();
-				result.add(new SimpleBean("One", "Two", "Three"));
-				result.add(new SimpleBean("Four", "Five", "Six"));
-				result.add(new SimpleBean("Seven", "Eight", "Nive"));
+				if( start == null ) { start = 0; }
+				if( count == null ) { count = 100; }
+				for( int i=0; i<count; i++ ) { 
+					result.add(new SimpleBean(String.valueOf(start+i), String.valueOf(Math.random()), String.valueOf( Math.round(Math.random()*10) ) ));
+				} 
 				return result.iterator();
-			}
 
-			@Override
-			protected ColumnModel[] getColumns() {
-				ColumnModel col1 = new ColumnModel("col1", "Colonna 1");
-				ColumnModel col2 = new ColumnModel("col2", "Colonna 2");
-				ColumnModel col3 = new ColumnModel("col3", "Colonna 3");
-
-				return new ColumnModel[] { col1, col2, col3 };
-			}} );
+			}}
+			.setPageSize(50)
+		);
 	}
 }

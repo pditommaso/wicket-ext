@@ -8,7 +8,7 @@ import org.wicketstuff.extjs.form.ExtHtmlEditor;
 
 public class HtmlEditorPage extends WebPage {
 
-	String body = "ciao";
+	String body = "ci\\ao's&,Ö";
 	
 	public HtmlEditorPage() { 
 		
