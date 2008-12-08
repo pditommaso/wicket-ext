@@ -8,13 +8,39 @@
 
 <div wicket:id="dialog"></div>
 
-<div>
-<a wicket:id="confirm" >confirm</a> 
-</div>
+<table border="0">
+	<col align="right" />
+	<col align="left" />
 
-<div >
-  <button wicket:id="button" >click</button>
-</div>
+	<tr><td>Confirmation dialog </td> 
+		<td>--&gt;&nbsp;<a wicket:id="confirm" >show</a></td> </tr>
+	
+	<tr><td>Alert dialog </td> 
+		<td>--&gt;&nbsp;<a wicket:id="alert" >show</a></td> </tr>
+	
+	<tr><td>Prompt dialog</td> 
+		<td>--&gt;&nbsp;<a wicket:id="prompt" >show</a></td> </tr>
+	
+	<tr><td>Prompt Muli-line</td> 
+		<td>--&gt;&nbsp;<a wicket:id="promptMultiline" >show</a></td> </tr>
+	
+	<tr><td>Confirm dialog behavior attached to a button</td> 
+		<td>--&gt;&nbsp;<button wicket:id="confirmBtn" >click</button></td> </tr>
+
+	<tr><td>Alert dialog behavior attached to a button</td> 
+		<td>--&gt;&nbsp;<button wicket:id="alertBtn" >click</button></td> </tr>
+
+	<tr><td>Info dialog behavior attached to a button</td> 
+		<td>--&gt;&nbsp;<button wicket:id="infoBtn" >click</button></td> </tr>
+
+	<tr><td>Prompt dialog behavior attached to a button</td> 
+		<td>--&gt;&nbsp;<button wicket:id="promptBtn" >click</button></td> </tr>
+
+	<tr><td>Error dialog behavior attached to a button</td> 
+		<td>--&gt;&nbsp;<button wicket:id="errorBtn" >click</button></td> </tr>
+
+</table>
+
 
 </body>
 </html>
