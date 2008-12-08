@@ -2,13 +2,13 @@ package org.wicketstuff.extjs.data;
 
 import org.wicketstuff.extjs.ExtClass;
 
-public class ExtXmlReader extends ExtClass {
+public class XmlReader extends ExtClass {
 
-	public ExtXmlReader() {
+	public XmlReader() {
 		this("Ext.data.XmlReader");
 	}
 
-	public ExtXmlReader(Object... options) {
+	public XmlReader(Object... options) {
 		super("Ext.data.XmlReader",options);
 	}
 

@@ -1,8 +1,6 @@
 package org.wicketstuff.extjs.form;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -11,13 +9,13 @@ import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.model.IModel;
 import org.wicketstuff.extjs.XTemplate;
 import org.wicketstuff.extjs.behavior.ExtAutoCompleteBehavior;
-import org.wicketstuff.extjs.behavior.ExtDataStoreBehavior;
-import org.wicketstuff.extjs.util.ObjectMapper;
+import org.wicketstuff.extjs.behavior.ExtDataLinkBehavior;
+import org.wicketstuff.extjs.data.DataProvider;
+import org.wicketstuff.extjs.data.ObjectMap;
 
-public abstract class ExtAutoCompleteField<T> extends TextField {
+public abstract class ExtAutoCompleteField<T> extends TextField implements DataProvider<T> {
 
-
-	private ExtDataStoreBehavior<T> data;
+	private ExtDataLinkBehavior<T> data;
 	
 	private IChoiceRenderer choiceRenderer = new ChoiceRenderer();
 	
@@ -43,24 +41,11 @@ public abstract class ExtAutoCompleteField<T> extends TextField {
 		            "<h3>{display}</h3>",
 		            "{excerpt}",
 		        	"</div></tpl>");			
-
 		
-		ObjectMapper<T> mapper = new ObjectMapper<T>() {
-			public Map<String,Object> mapObject( Object object, int index ) { 
-				Map<String,Object> result = new HashMap<String, Object>();
-				result.put( "id", choiceRenderer.getIdValue(object, index) );
-				result.put( "display", choiceRenderer.getDisplayValue(object) );
-				return result;
-			}}; 
 		/*
 		 * Data store to retrieve data
 		 */
-		data = new ExtDataStoreBehavior<T>(mapper) {
-
-			@Override
-			protected Iterator<T> getChoices(String input) {
-				return ExtAutoCompleteField.this.getChoices(input);
-			}};
+		data = new ExtDataLinkBehavior<T>(this);
 		add( data );
 		
 		/*
@@ -77,7 +62,21 @@ public abstract class ExtAutoCompleteField<T> extends TextField {
 
 	}
 
+	public ObjectMap mapObject( T object, Integer index  ) { 
+		ObjectMap result = new ObjectMap("id","display");
+		if( object != null ) { 
+			result.put( "id", choiceRenderer.getIdValue(object, index) );
+			result.put( "display", choiceRenderer.getDisplayValue(object) );
+		}
+		return result;
+	}
 
+	final public Iterator<T> iterator( String filter, String direction, Integer start, Integer count ) { 
+		return getChoices(filter);
+	}
+	
+	final public Long totalRecords() { return null; }
+	
 	protected abstract Iterator<T> getChoices(final String input);
 
 

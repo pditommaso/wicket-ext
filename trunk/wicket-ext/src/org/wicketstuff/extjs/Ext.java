@@ -7,6 +7,7 @@ import java.util.Map;
 import org.apache.wicket.Component;
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.behavior.HeaderContributor;
+import org.apache.wicket.model.IModel;
 
 /**
  * Ext helper class. Provides common utility methods
@@ -36,9 +37,29 @@ public class Ext {
 		component.add(HeaderContributor.forJavaScript( Ext.Js.EXT_ALL_DEBUG ));		
 	}
 	
+	private static CharSequence escape(CharSequence input) { 
+		if (input == null) { 
+			return null;
+		}
+		StringBuilder result = new StringBuilder(64);
+		for( int i=0, c=input.length(); i<c; i++ ) {
+			char ch;
+			switch( ch = input.charAt(i) ) { 
+				case '\\': result.append("\\\\"); break;
+				case '\'': result.append("\\'"); break;
+				case '\"': result.append("\\\""); break;
+				case '\n': result.append("\\n"); break;
+				case '\r': result.append("\\r"); break;
+				case '\t': result.append("\\t"); break;
+				default: result.append(ch);
+			}
+		}
+		return result;
+	}
+	
 	public static Object serialize(Object value) {
 		if( value instanceof CharSequence ) {
-			return "'" + value + "'";
+			return "'" + escape((CharSequence)value) + "'";
 		}
 		else if( value instanceof Map<?,?> ){
 			return serialize( (Map<?,?>) value );
@@ -46,8 +67,11 @@ public class Ext {
 		else if( value instanceof Collection<?> ){
 			return serialize( (Collection<?>) value );
 		} 
-		else if( value.getClass().isArray() ) { 
+		else if( value != null && value.getClass().isArray() ) { 
 			return serialize( (Object[]) value );
+		}
+		else if( value instanceof IModel ) { 
+			return serialize( ((IModel)value).getObject() );
 		}
 		else { 
 			return String.valueOf(value);

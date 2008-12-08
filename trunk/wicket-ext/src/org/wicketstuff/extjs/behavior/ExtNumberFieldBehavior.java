@@ -3,7 +3,7 @@ package org.wicketstuff.extjs.behavior;
 import org.wicketstuff.extjs.Config;
 
 
-public class ExtNumberFieldBehavior extends ExtFieldBehavior {
+public class ExtNumberFieldBehavior extends ExtComponentBehavior {
 
 	public ExtNumberFieldBehavior() {
 		super("Ext.form.NumberField");

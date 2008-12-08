@@ -51,6 +51,18 @@ public class Config  implements Serializable {
 		return this;
 	}
 	
+	/**
+	 * Put all entris in specified object that does NOT exist in the current instance
+	 */
+	public Config putNotExisting( Config config ) { 
+		for( Map.Entry<String, Object> e : config.map.entrySet() ) { 
+			if( !map.containsKey(e.getKey()) ) { 
+				map.put(e.getKey(), e.getValue());
+			}
+		}
+		return this;
+	}
+	
 	@Override
 	public String toString() { 
 		return Ext.serialize(map).toString();

@@ -2,13 +2,15 @@ package org.wicketstuff.extjs.behavior;
 
 import org.apache.wicket.Component;
 import org.wicketstuff.extjs.Config;
-import org.wicketstuff.extjs.ExtClass;
 
 public class ExtPanelBehavior extends ExtComponentBehavior {
 
 
 	private String wrapperId; 
 
+	{
+		defaultOptions.set("collapsible", true);
+	}
 
 	public ExtPanelBehavior() {
 		super("Ext.Panel");
@@ -28,6 +30,11 @@ public class ExtPanelBehavior extends ExtComponentBehavior {
 	
 
 	@Override
+	protected String getApplyId() { 
+		return wrapperId;
+	}
+	
+	@Override
 	public void beforeRender(Component component) {
 		super.beforeRender(component);
 		component.getResponse().write(String.format("<div id='%s'>", wrapperId));
@@ -41,13 +48,10 @@ public class ExtPanelBehavior extends ExtComponentBehavior {
 	}
 
 	@Override
-	protected ExtClass create( Config options ) { 
-		options.set("applyTo", wrapperId);
+	protected void onExtConfig( Config options ) { 
 		options.set("contentEl", getComponent().getMarkupId() );
 		options.set("title", "Hello there!");
 		options.set("width", 400);
-		options.set("collapsible", true);
-		return new ExtClass(getExtClassName(), options);
 	}
 	
 }

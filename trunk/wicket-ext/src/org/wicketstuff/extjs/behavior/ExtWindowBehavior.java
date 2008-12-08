@@ -1,7 +1,6 @@
 package org.wicketstuff.extjs.behavior;
 
 import org.wicketstuff.extjs.Config;
-import org.wicketstuff.extjs.ExtClass;
 
 /**
  * Wrapper class to handle an Ext <code>Ext.Window</code>
@@ -28,16 +27,9 @@ public class ExtWindowBehavior extends ExtComponentBehavior {
 	}
 	
 	@Override
-	protected ExtClass create( Config options ) { 
-		options.set("applyTo",getComponent().getMarkupId());
-		return new ExtClass(getExtClassName(), options);
-	}
-	
-	@Override
-	protected CharSequence onDomReady() { 
-		CharSequence script = super.onDomReady();
+	protected CharSequence onExtScript(Config config) { 
 		StringBuilder result = new StringBuilder()
-			.append(varName) .append("=") .append(script) .append("; ");
+			.append(varName) .append("=") .append( super.onExtScript(config) ) .append("; ");
 			
 		return result;
 	}

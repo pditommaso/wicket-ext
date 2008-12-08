@@ -5,42 +5,41 @@ import java.util.Map;
 
 import org.apache.wicket.Application;
 import org.apache.wicket.IRequestTarget;
+import org.apache.wicket.Request;
 import org.apache.wicket.RequestCycle;
+import org.apache.wicket.behavior.AbstractAjaxBehavior;
 import org.apache.wicket.protocol.http.WebResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wicketstuff.extjs.Config;
-import org.wicketstuff.extjs.data.ExtDataSource;
-import org.wicketstuff.extjs.data.ExtXmlReader;
+import org.wicketstuff.extjs.data.DataProvider;
+import org.wicketstuff.extjs.data.ExtDataLink;
 import org.wicketstuff.extjs.data.Store;
-import org.wicketstuff.extjs.util.ObjectMapper;
+import org.wicketstuff.extjs.data.XmlReader;
 import org.wicketstuff.extjs.util.XmlRenderer;
 
 /**
- * Behavior providing datasource capabilities to EXT components 
+ * Behavior providing datasource capabilities to Ext components 
  * 
  * @author Paolo Di Tommaso
  *
  */
-public abstract class ExtDataStoreBehavior<T> extends ExtAbstractBehavior implements ExtDataSource {
+public class ExtDataLinkBehavior<T> extends AbstractAjaxBehavior implements ExtDataLink {
 
-	private static final Logger log = LoggerFactory.getLogger(ExtDataStoreBehavior.class);
+	private static final Logger log = LoggerFactory.getLogger(ExtDataLinkBehavior.class);
 	
-	private XmlRenderer<T> response;
-
-	private ExtXmlReader extXmlReader;
 	private Store store;
-	
+	private DataProvider<T> provider;
 	private static final String QUERY_PARAM = "q";
 
-	private ObjectMapper<T> mapper;
-	
-	
-	public ExtDataStoreBehavior(ObjectMapper<T> mapper) {
-		this.mapper = mapper;
-		this.response = new XmlRenderer<T>(mapper);
+	public ExtDataLinkBehavior(DataProvider<T> dataSource) {
+		this.provider = dataSource;
 	}
 	
+	
+	/**
+	 * @return the Ext <code>Store</code> component to manage the data connection
+	 */
 	final public Store getStore() {
 		if( store == null ) { 
 			store = createStore();
@@ -48,10 +47,10 @@ public abstract class ExtDataStoreBehavior<T> extends ExtAbstractBehavior implem
 		return store;
 	}
 	
-	public void setStore( Store store ) { 
-		this.store = store;
-	}
 	
+	/**
+	 * @return defines the url parameter used to query data
+	 */
 	public String getQueryParam() { 
 		return QUERY_PARAM;
 	}
@@ -61,7 +60,7 @@ public abstract class ExtDataStoreBehavior<T> extends ExtAbstractBehavior implem
 		/* 
 		 * record definition for reader 
 		 */
-		Map<String,Object> sample = mapper.mapObject(null, 0);
+		Map<String,Object> sample = provider.mapObject(null, null);
 		
 		Object[] record = {};
 		if( sample != null ) { 
@@ -77,25 +76,44 @@ public abstract class ExtDataStoreBehavior<T> extends ExtAbstractBehavior implem
 		 * Xml reader to fetch the response data 
 		 */
 		
-		Config config = new Config()	
-			.set("record","item")
-			.set("id","id");
-		extXmlReader = new ExtXmlReader( config, record );
+		Config config = new Config();	
+		config.set("record", XmlRenderer.ITEM );
+		config.set("id","id");
+		config.set("totalRecords", XmlRenderer.TOTAL_SIZE );
+		XmlReader xmlReader = new XmlReader( config, record );
 		
 		
 		/*
 		 * main datastore object 
 		 */
-		Config storeConfig = new Config()
-			.set( "url", getCallbackUrl() )
-			.set( "reader", extXmlReader );
+		Config storeConfig = new Config();
+		storeConfig.set( "url", getCallbackUrl() );
+		storeConfig.set( "reader", xmlReader );
 		return new Store( storeConfig );
 	}
 
+	private Integer num( String value, String message) { 
+		if( value == null ) { 
+			return null;
+		}
+
+		Integer result = null;
+		try { 
+			result = Integer.parseInt(value);
+		} catch( NumberFormatException e ) { 
+			log.warn(message,value);
+		}
+		return result;
+		
+	}
+	
 	public void onRequest() {
-        final String input = getComponent().getRequestCycle().getRequest().getParameter(QUERY_PARAM);
+		Request request = getComponent().getRequestCycle().getRequest();
+        final String input = request.getParameter(QUERY_PARAM);
+        final Integer limit = num(request.getParameter("limit"), "Parameter 'limit' is not a valid number: {}");
+        final Integer start = num(request.getParameter("start"), "Paramer 'start' is not a valid number: {}");
         if( log.isDebugEnabled() ) { 
-        	log.debug("Store request input: '%s'", input);
+        	log.debug("Store request input: '{}'", input);
         }
 
 		IRequestTarget target = new IRequestTarget()
@@ -103,8 +121,8 @@ public abstract class ExtDataStoreBehavior<T> extends ExtAbstractBehavior implem
 
 			public void respond(RequestCycle requestCycle)
 			{
-				
 				WebResponse webResponse = (WebResponse)requestCycle.getResponse();
+				XmlRenderer<T> xml = new XmlRenderer<T>(provider);
 				
 				// Determine encoding
 				final String encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
@@ -115,15 +133,15 @@ public abstract class ExtDataStoreBehavior<T> extends ExtAbstractBehavior implem
 				webResponse.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
 				webResponse.setHeader("Cache-Control", "no-cache, must-revalidate");
 				webResponse.setHeader("Pragma", "no-cache");
-
-				Iterator<T> choices = getChoices(input);
-				response.renderHeader(webResponse);
+				//TODO implements other iterator parameters
+				Iterator<T> choices = provider.iterator(input,null,start,limit);
+				xml.renderHeader(webResponse);
 				while (choices.hasNext())
 				{
 					final T item = choices.next();
-					response.render(item, webResponse, input);
+					xml.render(item, webResponse, input);
 				}
-				response.renderFooter(webResponse);
+				xml.renderFooter(webResponse);
 			}
 
 			public void detach(RequestCycle requestCycle)
@@ -135,13 +153,5 @@ public abstract class ExtDataStoreBehavior<T> extends ExtAbstractBehavior implem
 		getComponent().getRequestCycle().setRequestTarget(target);			
 	}	
 
-	
-	abstract protected Iterator<T> getChoices(String input);
 
-
-	
-	@Override
-	protected CharSequence onDomReady() { 
-		return null;
-	}
 }

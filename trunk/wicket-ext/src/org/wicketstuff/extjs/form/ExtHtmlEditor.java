@@ -5,7 +5,6 @@ import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.form.AbstractTextComponent;
 import org.apache.wicket.model.IModel;
 import org.wicketstuff.extjs.Config;
-import org.wicketstuff.extjs.ExtClass;
 import org.wicketstuff.extjs.behavior.ExtComponentBehavior;
 
 public class ExtHtmlEditor extends AbstractTextComponent {
@@ -70,16 +69,17 @@ class ExtHtmlEditorBehavior extends ExtComponentBehavior {
 		tag.getAttributes().remove("name");		
 	}
 	
-	
+	@Override
+	protected String getApplyMethod() { 
+		return "renderTo";
+	}
+		
 	
 	@Override
-	public ExtClass create( Config config ) { 
+	protected void onExtConfig( Config config ) { 
 		AbstractTextComponent comp = (AbstractTextComponent) getComponent();
-		
-		config.set("renderTo", getComponent().getMarkupId() );
 		config.set("name", comp.getId() );
-		config.set("value", comp.getValue());
-		return new ExtClass(getExtClassName(), config);
+		config.set("value", comp.getModelObject());
 	}
 	
 	
