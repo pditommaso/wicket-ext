@@ -2,49 +2,89 @@ package org.wicketstuff.extjs.behavior;
 
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+/**
+ * Wrapper class for <code>Ext.QuickTips</code>
+ *  
+ * @author vmoreau
+ * @author Paolo Di Tommaso
+ *
+ */
 public class ExtQuickTipsBehavior extends ExtAbstractBehavior {
 
 	private static final long serialVersionUID = 1L;
-	private String title = null;
-	private String texte = null;
+	private IModel title = null;
+	private IModel text = null;
 	private int width = 0;
 	
-	public ExtQuickTipsBehavior(String pTexte) {
-		super();
-		texte = pTexte;
+	
+	/**
+	 * @param text the string to be displayed in the tooltip 
+	 */
+	public ExtQuickTipsBehavior(String pTexte) { 
+		this( new Model(pTexte) );
+	}
+
+	/**
+	 * @param pTexte the string to be displayed in the tooltip 
+	 * @param pTitle
+	 */
+	public ExtQuickTipsBehavior(String text, String title) {
+		this( new Model(text), new Model(title) );
 	}
 	
-	public ExtQuickTipsBehavior(String pTexte, String pTitle) {
-		super();
-		texte = pTexte;
-		title = pTitle;
+	
+	public ExtQuickTipsBehavior(IModel text) {
+		this.text = text;
+	}
+	
+	public ExtQuickTipsBehavior(IModel text, IModel title) {
+		this.text = text;
+		this.title = title;
 	}
 	
 	@Override
 	public void onBind() { 
-		getComponent().add(new AttributeModifier("ext:qtip", true, new Model(texte)));
-		if(title!=null) getComponent().add(new AttributeAppender("ext:qtitle", true, new Model(title), " "));
-		if(width > 0) getComponent().add(new AttributeAppender("ext:qwidth", true, new Model(width), " "));
 		super.onBind();
+		/* quick tip text */
+		getComponent().add(new AttributeModifier("ext:qtip", true, text));
+
+		/* quick tip title */
+		if(title!=null) { 
+			getComponent().add(new AttributeAppender("ext:qtitle", true, title, " "));
+		}
+		
+		/* quick tip width */
+		IModel model = new AbstractReadOnlyModel() {
+			@Override
+			public Object getObject() {
+				return width > 0 ? width : null;
+			} }; 
+		getComponent().add(new AttributeModifier("ext:qwidth", true, model));
+
 	}
 
 	public String getTitle() {
-		return title;
+		return title != null ? (String)title.getObject() : null; 
 	}
 
 	public ExtQuickTipsBehavior setTitle(String title) {
-		this.title = title;
+		if( this.title == null ) { 
+			this.title = new Model();
+		}
+		this.title.setObject(title);
 		return this;
 	}
 
-	public String getTexte() {
-		return texte;
+	public String getText() {
+		return (String)text.getObject();
 	}
 
-	public ExtQuickTipsBehavior setTexte(String texte) {
-		this.texte = texte;
+	public ExtQuickTipsBehavior setTexte(String text) {
+		this.text.setObject(text);
 		return this;
 	}
 
