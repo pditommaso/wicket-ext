@@ -9,7 +9,7 @@ import org.wicketstuff.extjs.tabs.ExtTabbedPanel;
  */
 public class TabbedPanelPage extends WebPage {
   public TabbedPanelPage() {
-    ExtTabbedPanel panel = new ExtTabbedPanel("tabs");
+    ExtTabbedPanel panel = new ExtTabbedPanel("tabs",true);
     add(panel);
     panel.add(new WebMarkupContainer("first"));
     panel.add(new WebMarkupContainer("second"));
