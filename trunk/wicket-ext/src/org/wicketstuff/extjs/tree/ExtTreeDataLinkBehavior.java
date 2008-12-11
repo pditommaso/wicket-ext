@@ -44,7 +44,7 @@ public class ExtTreeDataLinkBehavior extends AbstractAjaxBehavior {
 				// Determine encoding
 				final String encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 				webResponse.setCharacterEncoding(encoding);
-				webResponse.setContentType("text/xml; charset=" + encoding);
+				webResponse.setContentType("text/plain; charset=" + encoding);
 
 				// Make sure it is not cached by a
 				webResponse.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
