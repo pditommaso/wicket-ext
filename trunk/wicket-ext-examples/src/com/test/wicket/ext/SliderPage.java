@@ -19,7 +19,7 @@ public class SliderPage extends WebPage {
 		};
 		add(slide1.setWidth(200));
 		
-		ExtSlider slide2 = new ExtSlider("slider2", new Model<Integer>(25)){
+		ExtSlider slide2 = new ExtSlider("slider2", new Model(new Integer(25))){
 			private static final long serialVersionUID = 1L;
 
 			@Override
