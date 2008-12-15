@@ -12,7 +12,7 @@ public abstract class ExtTreePanel extends MarkupContainer {
 
 	private static final long serialVersionUID = 1L;
 	private ExtTreeDataLinkBehavior data;
-	private String racine;
+	private String root;
 	
 	private Config config ;
 	
@@ -22,20 +22,20 @@ public abstract class ExtTreePanel extends MarkupContainer {
 		config.set("height", 260);
 	}
 	
-	public ExtTreePanel(String id, IModel model, String pRacine) {
+	public ExtTreePanel(String id, IModel model, String root) {
 		super(id, model);
-		init(pRacine);
+		init(root);
 	}
 
-	public ExtTreePanel(String id, String pRacine) {
+	public ExtTreePanel(String id, String root) {
 		super(id);
-		init(pRacine);
+		init(root);
 	}
 
-	private void init(String pRacine) {
+	private void init(String root) {
 		add( (IBehavior)(data = new ExtTreeDataLinkBehavior(this)) );
 		add(new ExtTreePanelBehavior(config));
-		racine = pRacine;
+		this.root = root;
 	}
 	
 	public ExtTreePanel setWidth( int width ) { 
@@ -116,13 +116,13 @@ public abstract class ExtTreePanel extends MarkupContainer {
 		protected CharSequence onExtScript(Config config) { 
 			StringBuilder result = new StringBuilder();
 
-			ExtAsyncTreeNode root = new ExtAsyncTreeNode(racine,ExtAsyncTreeNode.ROOT_ID);
-			result.append( root.newInstance("root") );
+			ExtAsyncTreeNode rootNode = new ExtAsyncTreeNode(root,ExtAsyncTreeNode.ROOT_ID);
+			result.append( rootNode.newInstance("root") );
 			
 			ExtTreeLoader loader = new ExtTreeLoader(data.getCallbackUrl().toString());
 			result.append( loader.newInstance("loader") );
 			
-			config.set("root", root );
+			config.set("root", rootNode );
 			config.set("loader", loader );
 			result.append( create(config).newInstance("tree") );
 			
