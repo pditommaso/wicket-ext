@@ -29,11 +29,11 @@ public class ExtSlider extends WebMarkupContainer {
 	}
 
 	public ExtSlider(String id) {
-		super(id, new Model<Integer>(0));
+		super(id, new Model(new Integer(0)));
 		init();
 	}
 
-	public ExtSlider(String id, IModel<Integer> model) {
+	public ExtSlider(String id, IModel model) {
 		super(id, model);
 		init();
 	}
@@ -73,7 +73,7 @@ public class ExtSlider extends WebMarkupContainer {
 	}
 	
 	public ExtSlider setValue( int value ) { 
-		setDefaultModelObject(value);
+		setModelObject(value);
 		return this;
 	}
 	
@@ -102,7 +102,7 @@ public class ExtSlider extends WebMarkupContainer {
 		
 		@Override
 		protected CharSequence onExtScript(Config config) { 
-			config.set("value", new ExtLiteral(getDefaultModelObjectAsString()));
+			config.set("value", new ExtLiteral(getModelObjectAsString()));
 			return super.onExtScript(config);
 		}
 		
@@ -120,8 +120,8 @@ public class ExtSlider extends WebMarkupContainer {
 		@Override
 		protected final void onEvent(AjaxRequestTarget target) {
 			String newValue = RequestCycle.get().getRequest().getParameter(VALUE_PARAM);
-			String oldValue = getDefaultModelObjectAsString();
-			setDefaultModelObject(Integer.valueOf(newValue));
+			String oldValue = getModelObjectAsString();
+			setModelObject(Integer.valueOf(newValue));
 			onChange(Integer.valueOf(oldValue),Integer.valueOf(newValue),target);
 		}
 	}
