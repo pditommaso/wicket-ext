@@ -1,49 +1,57 @@
+/*
+ *  Copyright 2008 Wicket-Ext
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.wicketstuff.extjs.dialog;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.MarkupStream;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.wicketstuff.extjs.Config;
-import org.wicketstuff.extjs.Ext;
-import org.wicketstuff.extjs.ExtClass;
+import org.wicketstuff.extjs.ExtContainer;
+import org.wicketstuff.extjs.behavior.ExtComponentBehavior;
 
 /**
  * Wrapper component for <code>Ext.Window</code> class
- * 
+ *
  * @author Paolo Di Tommaso
  *
  */
-public class ExtWindow extends WebMarkupContainer {
+public class ExtWindow extends ExtContainer {
 
-	private final Config config;
+	Window window;
 
 	private String wrapId;
-	
-	{ 
-		config = new Config();
-		config.set("width", 400);
-	}
-	
+
 	public ExtWindow(String id) {
 		super(id);
 		init();
 	}
-	
+
 	public ExtWindow(String id, IModel model) {
 		super(id, model);
 		init();
-	}	
-	
-	private void init() { 
-		Ext.addContribution(this);
-		setOutputMarkupId(true);
-		add( new AttributeAppender("class", new Model("x-hidden"), " " ));
 	}
-	
+
+	private void init() {
+		add(window = new Window(config()));
+	}
+
 
 	@Override
 	protected void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
@@ -54,28 +62,45 @@ public class ExtWindow extends WebMarkupContainer {
 	}
 
 
-	public void show( AjaxRequestTarget target ) { 
-		target.addComponent(this);	// <-- force component reloading to refresh content 
-		config.set("contentEl", wrapId );
-		ExtClass win = new ExtClass("Ext.Window", config );
-		target.appendJavascript(String.format("%s.show();", win));
+	public void show( AjaxRequestTarget target ) {
+		target.addComponent(this);	// <-- force component reloading to refresh content
+		target.appendJavascript(String.format("%s.show();", window.script()));
 	}
 
 
-	
-	public void setTitle( String title ) { 
-		config.set("title", title);
+
+	public void setModal( boolean modal ) {
+		window.config().set("modal", modal);
 	}
-	
-	public void setModal( boolean modal ) { 
-		config.set("modal", modal);
+
+	public void setBodyStyle(String style) {
+		window.config().set("bodyStyle", style);
 	}
-	
-	public void setWidth( int width ) { 
-		config.set("width", width );
-	}
-	
-	public void setHeight( int height ) { 
-		config.set("height", height);
+
+
+	/**
+	 * Inner window behavior to handle the component
+	 *
+	 * @author Paolo Di Tommaso
+	 *
+	 */
+	class Window extends ExtComponentBehavior {
+
+		protected Window(Config config) { super("Ext.Window", config);  }
+
+		@Override
+		public void onBind() { super.onBind(); getComponent().add(new AttributeAppender("class", new Model("x-hidden"), " " )); }
+
+		@Override
+		protected String getApplyMethod() { return "contentEl"; }
+
+		@Override
+		protected String getApplyId() { return wrapId; }
+
+		@Override
+		protected CharSequence onExtScript( Config config ) { return null; };
+
+		public CharSequence script() { return create(config()).newInstance(); };
+
 	}
 }
