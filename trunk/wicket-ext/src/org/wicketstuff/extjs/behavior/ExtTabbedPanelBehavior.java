@@ -1,6 +1,20 @@
-package org.wicketstuff.extjs.behavior;
+/*
+ *  Copyright 2008 Wicket-Ext
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
-import java.util.Iterator;
+package org.wicketstuff.extjs.behavior;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -9,29 +23,27 @@ import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.repeater.AbstractRepeater;
 import org.apache.wicket.model.Model;
 import org.wicketstuff.extjs.Config;
-import org.wicketstuff.extjs.ExtClass;
 
 public class ExtTabbedPanelBehavior extends ExtComponentBehavior {
-  {
-    defaultOptions.set("autoTabs", true);
-    defaultOptions.set("autoWidth", true);
-    defaultOptions.set("deferredRender", false);
-}
 
   private boolean autoTagComponents;
 
-  public ExtTabbedPanelBehavior(boolean autoTagComponents) {
-    super("Ext.TabPanel");
-    this.autoTagComponents = autoTagComponents;
+  public ExtTabbedPanelBehavior(Config config) {
+    super("Ext.TabPanel", config);
   }
 
+  public ExtTabbedPanelBehavior setAutoTagComponents( boolean autoTag ) {
+	  autoTagComponents = autoTag;
+	  return this;
+  }
+
+  @Override
   public void beforeRender(Component component) {
     super.beforeRender(component);
-    component.setOutputMarkupId(true);
-    
+
     if (autoTagComponents) {
       ((MarkupContainer)component).visitChildren(MarkupContainer.class, new IVisitor(){
-    
+
         public Object component(Component child) {
           if (child instanceof AbstractRepeater) {
             return null;
@@ -43,7 +55,7 @@ public class ExtTabbedPanelBehavior extends ExtComponentBehavior {
               return true;
             }
           });
-          
+
           return CONTINUE_TRAVERSAL_BUT_DONT_GO_DEEPER;
         }});
     }
@@ -51,7 +63,10 @@ public class ExtTabbedPanelBehavior extends ExtComponentBehavior {
 
   @Override
   protected void onExtConfig(Config options) {
-    options.set("activeTab", 0); // <-- this value could be defined programmatically
+	  options.set("autoTabs",true);
+	  options.set("autoWidth", true);
+	  options.set("deferredRender", false);
+	  options.set("activeTab", 0); // <-- this value could be defined programmatically
   }
 
 
