@@ -16,16 +16,17 @@
 
 package org.wicketstuff.extjs.data;
 
-import org.wicketstuff.extjs.ExtClass;
 
-public class XmlReader extends ExtClass {
+/**
+ * Ext store supporting groupping
+ *
+ * @author Paolo Di Tommaso
+ *
+ */
+public class GroupingStore extends Store {
 
-	public XmlReader() {
-		this("Ext.data.XmlReader");
-	}
-
-	public XmlReader(Object... options) {
-		super("Ext.data.XmlReader",options);
+	public GroupingStore(Object ... options) {
+		super("Ext.data.GroupingStore",options);
 	}
 
 }
