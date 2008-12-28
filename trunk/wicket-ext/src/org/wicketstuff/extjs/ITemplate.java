@@ -16,19 +16,17 @@
 
 package org.wicketstuff.extjs;
 
-import java.io.Serializable;
 
-public class ExtLiteral implements Serializable {
+/**
+ * Ext template interface to bind with rendering bahaviors
+ *
+ * @author Paolo Di Tommaso
+ *
+ */
+public interface ITemplate {
 
-	private String literal;
+	XTemplate getXTemplate();
 
-	public ExtLiteral( String literal ) {
-		this.literal = literal;
-	}
-
-	@Override
-	public String toString() {
-		return literal;
-	}
+	String getItemSelector();
 
 }

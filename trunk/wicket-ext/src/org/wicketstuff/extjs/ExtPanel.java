@@ -16,19 +16,29 @@
 
 package org.wicketstuff.extjs;
 
-import java.io.Serializable;
+import org.apache.wicket.model.IModel;
+import org.wicketstuff.extjs.behavior.ExtPanelBehavior;
 
-public class ExtLiteral implements Serializable {
+/**
+ * Component to wrap Ext panel
+ *
+ * @author Paolo Di Tommaso
+ *
+ */
+public class ExtPanel extends ExtContainer {
 
-	private String literal;
-
-	public ExtLiteral( String literal ) {
-		this.literal = literal;
+	public ExtPanel(String id) {
+		super(id);
+		init();
 	}
 
-	@Override
-	public String toString() {
-		return literal;
+	public ExtPanel(String id, IModel model) {
+		super(id, model);
+		init();
+	}
+
+	private void init() {
+		add(new ExtPanelBehavior(config()));
 	}
 
 }
