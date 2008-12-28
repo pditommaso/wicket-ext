@@ -94,7 +94,6 @@ public abstract class ExtAbstractBehavior extends AbstractAjaxBehavior {
 	@Override
 	protected void onComponentRendered() {
 
-		onExtRender();
 		CharSequence script = renderExtScript();
 		if( script != null ) {
 			Response response = getComponent().getResponse();
@@ -103,13 +102,6 @@ public abstract class ExtAbstractBehavior extends AbstractAjaxBehavior {
 			response.write( String.format("Ext.onReady(function(){%s} )", script) );
 			response.write( JavascriptUtils.SCRIPT_CLOSE_TAG );
 		}
-	}
-
-	/**
-	 * Template method fired before the Ext component has been rendered.
-	 */
-	protected void onExtRender() {
-
 	}
 
 
