@@ -9,20 +9,19 @@ import org.wicketstuff.extjs.dialog.ExtWindow;
 
 public class WindowPage extends WebPage {
 
-	public WindowPage() { 
-		
-		
+	public WindowPage() {
+
+
 		final ExtWindow window = new ExtWindow("window1");
-		window.setTitle("Hello");
 		window.setModal(true);
 		add(window);
-		
+
 		window.add( new Label("now", new AbstractReadOnlyModel() {
 			@Override
 			public Object getObject() {
 				return System.currentTimeMillis();
 			}} ));
-		
+
 		/* the button to show the window */
 		add( new AjaxLink("button") {
 
@@ -30,7 +29,7 @@ public class WindowPage extends WebPage {
 			public void onClick(AjaxRequestTarget target) {
 				window.show(target);
 			} } );
-		
+
 	}
-	
+
 }
