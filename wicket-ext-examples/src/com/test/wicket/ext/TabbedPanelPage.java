@@ -8,6 +8,7 @@ import org.wicketstuff.extjs.tabs.ExtTabbedPanel;
  * @author ittayd
  */
 public class TabbedPanelPage extends WebPage {
+
   public TabbedPanelPage() {
     ExtTabbedPanel panel = new ExtTabbedPanel("tabs",true);
     add(panel);

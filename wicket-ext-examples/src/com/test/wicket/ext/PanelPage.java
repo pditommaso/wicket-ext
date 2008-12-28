@@ -1,16 +1,15 @@
 package com.test.wicket.ext;
 
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.wicketstuff.extjs.behavior.ExtPanelBehavior;
+import org.wicketstuff.extjs.ExtPanel;
 
 public class PanelPage extends WebPage {
 
-	public PanelPage() { 
-		
-		
-		add( new WebMarkupContainer("content").add( new ExtPanelBehavior() )  );
+	public PanelPage() {
+
+		add( new ExtPanel("panel1")  );
+		add( new ExtPanel("panel2")  );
 
 	}
-	
+
 }
