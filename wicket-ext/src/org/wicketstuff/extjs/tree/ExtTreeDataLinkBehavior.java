@@ -1,3 +1,19 @@
+/*
+ *  Copyright 2008 Wicket-Ext
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.wicketstuff.extjs.tree;
 
 import java.util.Iterator;
@@ -12,8 +28,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Behavior providing data to ExtTreePanel 
- * 
+ * Behavior providing data to ExtTreePanel
+ *
  * @author Paolo Di Tommaso
  *
  */
@@ -21,18 +37,18 @@ public class ExtTreeDataLinkBehavior extends AbstractAjaxBehavior {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = LoggerFactory.getLogger(ExtTreeDataLinkBehavior.class);
-	
+
 	private ExtTreePanel provider;
 	private static final String QUERY_PARAM = "node";
 
 	public ExtTreeDataLinkBehavior(ExtTreePanel dataSource) {
-		this.provider = dataSource;
+		provider = dataSource;
 	}
 
 	public void onRequest() {
 		Request request = getComponent().getRequestCycle().getRequest();
         final String input = request.getParameter(QUERY_PARAM);
-        if( log.isDebugEnabled() ) { 
+        if( log.isDebugEnabled() ) {
         	log.debug("Store request input: '{}'", input);
         }
 
@@ -40,7 +56,7 @@ public class ExtTreeDataLinkBehavior extends AbstractAjaxBehavior {
 
 			public void respond(RequestCycle requestCycle) {
 				WebResponse webResponse = (WebResponse)requestCycle.getResponse();
-								
+
 				// Determine encoding
 				final String encoding = Application.get().getRequestCycleSettings().getResponseRequestEncoding();
 				webResponse.setCharacterEncoding(encoding);
@@ -52,12 +68,12 @@ public class ExtTreeDataLinkBehavior extends AbstractAjaxBehavior {
 				webResponse.setHeader("Pragma", "no-cache");
 				//TODO implements other iterator parameters
 				Iterator<TreeNode> choices = provider.iterator(input);
-				
+
 				webResponse.write("[");
 				while (choices.hasNext())
 				{
 					final TreeNode item = choices.next();
-					webResponse.write(item.toString());			
+					webResponse.write(item.toString());
 					if(choices.hasNext()) webResponse.write(",");
 				}
 				webResponse.write("]");
@@ -67,6 +83,6 @@ public class ExtTreeDataLinkBehavior extends AbstractAjaxBehavior {
 			{
 			}
 		};
-		getComponent().getRequestCycle().setRequestTarget(target);			
-	}	
+		getComponent().getRequestCycle().setRequestTarget(target);
+	}
 }

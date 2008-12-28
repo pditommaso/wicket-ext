@@ -1,12 +1,19 @@
 /*
- * 中山市网上审批系统 CyberWorks
- * 信息交换平台系统 CyberExchange
- * 版权所有(C)：深圳市科健信息技术有限公司
- *            中山市人民政府
- * @作者   Jackie Zhong
- * 创建日期 2008-12-14
+ *  Copyright 2008 Wicket-Ext
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package org.wicketstuff.extjs.tree;
 
 import org.apache.wicket.WicketRuntimeException;
@@ -18,9 +25,9 @@ import org.wicketstuff.extjs.behavior.ExtTreePanelBehavior;
 
 /**
  * another simple version of ExtTreePanel/ExtTreeNode/ExtTreePanelBehavior
- * 
- * support click event for the tree and the node. 
- * 
+ *
+ * support click event for the tree and the node.
+ *
  * @author Jackie Zhong
  */
 public class ExtTreeList extends WebMarkupContainer {
@@ -121,7 +128,7 @@ public class ExtTreeList extends WebMarkupContainer {
                 if (root == null)
                     throw new WicketRuntimeException("root node must be setted.");
                 options.set("root", root);
-                
+
                 if (title != null) {
                     options.set("title", title);
                     options.set("collapsible", true);
