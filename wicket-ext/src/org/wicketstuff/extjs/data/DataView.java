@@ -16,16 +16,24 @@
 
 package org.wicketstuff.extjs.data;
 
+import org.wicketstuff.extjs.Config;
 import org.wicketstuff.extjs.ExtClass;
 
-public class XmlReader extends ExtClass {
+/**
+ * Wrapper class for <code>Ext.DataView</code> class
+ *
+ * @author Paolo Di Tommaso
+ *
+ */
+public class DataView extends ExtClass {
 
-	public XmlReader() {
-		this("Ext.data.XmlReader");
+	public DataView() {
+		this(new Config());
 	}
 
-	public XmlReader(Object... options) {
-		super("Ext.data.XmlReader",options);
+	public DataView(Config config) {
+		super("Ext.DataView",config);
 	}
+
 
 }
