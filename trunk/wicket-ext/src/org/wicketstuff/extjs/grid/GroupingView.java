@@ -13,46 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.wicketstuff.extjs.grid;
 
 import org.wicketstuff.extjs.Config;
+import org.wicketstuff.extjs.Ext;
 import org.wicketstuff.extjs.ExtClass;
-import org.wicketstuff.extjs.data.ExtDataLink;
 
-public class ExtPagingToolbar extends ExtClass {
+public class GroupingView extends ExtClass {
 
-
+	private static final long serialVersionUID = 1L;
 	private static Config defaultOptions = new Config();
 
 	{
-		defaultOptions.put("pageSize", 25);
-		defaultOptions.put("displayInfo", true);
-		defaultOptions.put("displayMsg","Displaying topics {0} - {1} of {2}");
-		defaultOptions.put("emptyMsg", "No topics to display");
+		defaultOptions.put("forceFit", true);
+		defaultOptions.put("groupTextTpl", Ext.literal("'{text} ({[values.rs.length]} {[values.rs.length > 1 ? \"Items\" : \"Item\"]})'"));
 	}
 
-	private ExtDataLink link;
+	private Config config;
 
-	public ExtPagingToolbar(ExtDataLink link) {
-		this(link, new Config());
+	public GroupingView() {
+		this(new Config());
 	}
 
-	public ExtPagingToolbar(ExtDataLink link, Config config) {
-		super("Ext.PagingToolbar",config);
-		this.link = link;
+	public GroupingView(Config config) {
+		super("Ext.grid.GroupingView",config);
+		this.config = config;
 	}
 
 	@Override
 	public CharSequence newInstance() {
-		config().putIfNotExists(defaultOptions);
-		config().put("store", link.getStore() );
+		config.putIfNotExists(defaultOptions);
 		return super.newInstance();
-	}
-
-
-	public void setPageSize( int pageSize ) {
-		config().set("pageSize", pageSize);
 	}
 
 }
