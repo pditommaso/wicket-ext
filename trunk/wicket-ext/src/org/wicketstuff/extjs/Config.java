@@ -41,7 +41,7 @@ public class Config  implements Serializable, Map<String,Object> {
 	}
 
 	public Config( Config copy ) {
-		map = new HashMap<String,Object>(copy.map);
+		this.map = new HashMap<String,Object>(copy.map);
 	}
 
 	public Config( String key, Object value ) {
@@ -52,7 +52,6 @@ public class Config  implements Serializable, Map<String,Object> {
 	public <T> T get( String name ) {
 		return (T)map.get(name);
 	}
-
 
 	public Config set(String name, Object value ) {
 		map.put(name, value);
