@@ -16,132 +16,165 @@
 
 package org.wicketstuff.extjs.tree;
 
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.apache.wicket.MarkupContainer;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.RequestCycle;
+import org.apache.wicket.WicketRuntimeException;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.WicketAjaxReference;
+import org.apache.wicket.markup.html.IHeaderResponse;
+import org.apache.wicket.util.string.StringList;
 import org.wicketstuff.extjs.Config;
+import org.wicketstuff.extjs.Ext;
+import org.wicketstuff.extjs.ExtClass;
+import org.wicketstuff.extjs.ExtContainer;
+import org.wicketstuff.extjs.ExtFunction;
 import org.wicketstuff.extjs.behavior.ExtComponentBehavior;
+import org.wicketstuff.extjs.util.WicketCallBuilder;
 
-public abstract class ExtTreePanel extends MarkupContainer {
+/**
+ * another simple version of ExtTreePanel/ExtTreeNode/ExtTreePanelBehavior
+ *
+ * support click event for the tree and the node.
+ *
+ * @author Jackie Zhong
+ */
+public class ExtTreePanel extends ExtContainer {
 
-	private static final long serialVersionUID = 1L;
-	private ExtTreeDataLinkBehavior data;
-	private String root;
+    private static final long serialVersionUID = 1L;
 
-	private Config config ;
+	private ExtTreeNode root;
+    private boolean rootVisible = true;
+    private boolean autoScroll = true;
+    private boolean border = true;
 
-	{
-		config = new Config();
-		config.set("width", 220);
-		config.set("height", 260);
-	}
+    public ExtTreePanel(String id) {
+        super(id);
+        init();
+    }
 
-	public ExtTreePanel(String id, IModel model, String root) {
-		super(id, model);
-		init(root);
-	}
+    public ExtTreePanel(String id, ExtTreeNode root) {
+        this(id);
+        this.root = root;
+    }
 
-	public ExtTreePanel(String id, String root) {
-		super(id);
-		init(root);
-	}
+    public ExtTreePanel setRoot(ExtTreeNode root) {
+        this.root = root;
+        return this;
+    }
 
-	private void init(String root) {
-		add( (data = new ExtTreeDataLinkBehavior(this)) );
-		add(new ExtTreePanelBehavior(config));
-		this.root = root;
-	}
+    public ExtTreeNode getRoot() {
+        return root;
+    }
 
-	public ExtTreePanel setWidth( int width ) {
-		config.set("width", width );
-		return this;
-	}
+    public boolean isAutoScroll() {
+        return autoScroll;
+    }
 
-	public ExtTreePanel setHeight( int height ) {
-		config.set("height", height );
-		return this;
-	}
+    public ExtTreePanel setAutoScroll(boolean autoScroll) {
+        this.autoScroll = autoScroll;
+        return this;
+    }
 
-	public ExtTreePanel setAutoScroll( boolean autoScroll ) {
-		config.set("autoScroll", autoScroll );
-		return this;
-	}
+    public boolean isBorder() {
+        return border;
+    }
 
-	public ExtTreePanel setBorder( boolean  border  ) {
-		config.set("border",  border  );
-		return this;
-	}
+    public ExtTreePanel setBorder(boolean border) {
+        this.border = border;
+        return this;
+    }
 
-	public ExtTreePanel setBodyBorder( boolean bodyBorder ) {
-		config.set("bodyBorder", bodyBorder );
-		return this;
-	}
+    public boolean isRootVisible() {
+        return rootVisible;
+    }
 
-	public ExtTreePanel setAutoHeight( boolean autoHeight ) {
-		config.set("autoHeight",  autoHeight  );
-		return this;
-	}
+    public ExtTreePanel setRootVisible(boolean rootVisible) {
+        this.rootVisible = rootVisible;
+        return this;
+    }
 
-	public ExtTreePanel setAnimate( boolean  animate ) {
-		config.set("animate", animate );
-		return this;
-	}
+    private void init() {
+    	
+        setOutputMarkupId(true);
+        add(new ExtTreePanelBehavior(config()));
+    }
 
-	public ExtTreePanel setAnimCollapse( boolean animCollapse ) {
-		config.set("animCollapse", animCollapse );
-		return this;
-	}
+    private void doClick(String nodeid, AjaxRequestTarget target) {
+        ExtTreeNode node = findNode(nodeid) ;
+        onClick(node, target);
+        node.onClick(target);
+    }
 
-	public ExtTreePanel setTitle( String title ) {
-		config.set("title", title );
-		return this;
-	}
+    protected void onClick(ExtTreeNode node, AjaxRequestTarget target) {
+    }
+    
+    protected CharSequence getExtScript(Config config) {
+    	return "";
+    }
+    
+    protected ExtTreeNode findNode(String nodeid){
+    	StringList list = StringList.tokenize(nodeid, "_");
+    	ExtTreeNode node = root;
+        for (int i = 1; i < list.size(); i++)
+            node = node.childNodes().get(Integer.valueOf(list.get(i)));
+        
+        return node;
+    }
+    
+    private class ExtTreePanelBehavior extends ExtComponentBehavior {
 
-	public ExtTreePanel setRootVisible( boolean rootVisible ) {
-		config.set("rootVisible", rootVisible );
-		return this;
-	}
+        private static final long serialVersionUID = 1L;
+    	private static final String QUERY_PARAM = "nodeid";
 
-	public ExtTreePanel setUseArrows( boolean useArrows ) {
-		config.set("useArrows", useArrows );
-		return this;
-	}
+    	public ExtTreePanelBehavior(Config options) {
+    		super("Ext.tree.TreePanel", options);
+    	}
 
-	public abstract Iterator<TreeNode> iterator(String id);
+        @Override
+    	public void renderHead(IHeaderResponse response) {
+            super.renderHead(response);
+            response.renderJavascriptReference(WicketAjaxReference.INSTANCE);
+    	}
 
-	public class ExtTreePanelBehavior extends ExtComponentBehavior {
+    	@Override
+        protected void onExtConfig( Config config ) {
+    		config.putIfNotExists("rootVisible", false);
+    		config.putIfNotExists("loader", new ExtClass("Ext.tree.TreeLoader"));
 
-		private static final long serialVersionUID = 1L;
+            String url = getCallbackUrl().toString();
 
-		public ExtTreePanelBehavior( ) {
-			this(new Config());
-		}
+            Map<String,Object> params = new HashMap<String, Object>();
+            params.put(QUERY_PARAM, Ext.literal("node.id"));
+            WicketCallBuilder ajax = new WicketCallBuilder(url);
+            ajax.append(params);
+            config.set("listeners", new Config("click", new ExtFunction("node", ajax.toString())));
+            
+            if (root == null)
+                throw new WicketRuntimeException("root node must be setted.");
+            config.set("root", root);
 
-		public ExtTreePanelBehavior( Config config ) {
-			super("Ext.tree.TreePanel", config);
-		}
+            config.set("autoScroll", autoScroll);
+            config.set("border", border);
+            config.set("rootVisible", rootVisible);   
+        }
 
-		@Override
-		protected String getApplyMethod() {
-			return "renderTo";
-		}
+        @Override
+        final protected void onEvent(AjaxRequestTarget target) {
+            String nodeid = RequestCycle.get().getRequest().getParameter(QUERY_PARAM);
+            onClick(nodeid, target);
+        }
 
-		@Override
+        @Override
 		protected CharSequence onExtScript(Config config) {
-			StringBuilder result = new StringBuilder();
-
-			ExtAsyncTreeNode rootNode = new ExtAsyncTreeNode(root,ExtAsyncTreeNode.ROOT_ID);
-			result.append( rootNode.newInstance("root") );
-
-			ExtTreeLoader loader = new ExtTreeLoader(data.getCallbackUrl().toString());
-			result.append( loader.newInstance("loader") );
-
-			config.set("root", rootNode );
-			config.set("loader", loader );
-			result.append( create(config).newInstance("tree") );
-
-			return result;
-		}
-	}
+        	StringBuilder result = new StringBuilder(getExtScript(config));
+        	
+        	return result.append(super.onExtScript(config));
+        }
+		
+        protected void onClick(String nodeid, AjaxRequestTarget target) {
+            doClick(nodeid, target);
+        }
+    }
 }

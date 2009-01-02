@@ -33,21 +33,17 @@ import org.wicketstuff.extjs.Ext;
  */
 public class ExtTreeNode implements Serializable {
 
-    private String text;
-
+    private static final long serialVersionUID = 1L;
+	private String text;
     private boolean enabled = true;
-
     private String cls;
-
     private String qtip;
-
     private boolean draggable = false;
-
     private boolean allowChildren = true;
-
     private ExtTreeNode parentNode;
-
     private List<ExtTreeNode> childNodes = new ArrayList<ExtTreeNode>();
+    private boolean leaf = true;
+    private String id = null;
 
     public ExtTreeNode() {
         childNodes = new ArrayList<ExtTreeNode>();
@@ -57,7 +53,7 @@ public class ExtTreeNode implements Serializable {
         this();
         this.text = text;
     }
-
+      
     public ExtTreeNode(String text, ExtTreeNode parent) {
         this();
         this.text = text;
@@ -65,9 +61,13 @@ public class ExtTreeNode implements Serializable {
     }
 
     public String getId() {
-        if (isRoot())
-            return "0";
-        return parentNode.getId() + "_" + parentNode.childNodes().indexOf(this);
+    	if(id!=null)
+    		return id;
+    	else{
+	        if (isRoot())
+	            return "0";
+	        return parentNode.getId() + "_" + parentNode.childNodes().indexOf(this);
+    	}
     }
 
 //    public void setId(String id) {
@@ -110,6 +110,15 @@ public class ExtTreeNode implements Serializable {
         return this;
     }
 
+	public boolean isLeaf() {
+		return leaf;
+	}
+
+	public ExtTreeNode setLeaf(boolean leaf) {
+		this.leaf = leaf;
+        return this;
+	}
+    
     public boolean isDraggable() {
         return draggable;
     }
@@ -158,7 +167,7 @@ public class ExtTreeNode implements Serializable {
     public boolean contains(ExtTreeNode node) {
         return childNodes.contains(node);
     }
-
+    
     public void appendChild(ExtTreeNode node) {
         if (childNodes.indexOf(node) == -1)
             childNodes.add(node);
@@ -187,7 +196,10 @@ public class ExtTreeNode implements Serializable {
             config.set("qtip", qtip);
         config.set("draggable", draggable);
         config.set("allowChildren", allowChildren);
-        config.set("leaf", childNodes.size() == 0);
+        if(childNodes.size() > 0)
+        	config.set("leaf", false);
+        else
+        	config.set("leaf", leaf);
         if (childNodes.size() > 0)
             config.set("children", childNodes.toArray());
         return config;
@@ -207,4 +219,6 @@ public class ExtTreeNode implements Serializable {
 
         return result.toString();
     }
+
+
 }

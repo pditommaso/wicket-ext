@@ -3,7 +3,7 @@ package com.test.wicket.ext;
 import org.apache.wicket.PageParameters;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebPage;
-import org.wicketstuff.extjs.tree.ExtTreeList;
+import org.wicketstuff.extjs.tree.ExtTreePanel;
 import org.wicketstuff.extjs.tree.ExtTreeNode;
 
 public class TreeListPage extends WebPage {
@@ -11,8 +11,9 @@ public class TreeListPage extends WebPage {
     public TreeListPage(final PageParameters parameters) {
         super();
         
-        final ExtTreeList tree = new ExtTreeList("tree") {
-            @Override
+        final ExtTreePanel tree = new ExtTreePanel("tree") {
+            private static final long serialVersionUID = 1L;
+			@Override
             protected void onClick(ExtTreeNode node, AjaxRequestTarget target) {
                 target.appendJavascript("alert('tree.onClick: " + node.getText() + "');");
             }
@@ -20,6 +21,7 @@ public class TreeListPage extends WebPage {
         tree.setRoot(initTree());
         tree.setWidth(200);
         tree.setHeight(200);
+        tree.setTitle("Tree Panel");
 
         add(tree);
     }
@@ -31,7 +33,8 @@ public class TreeListPage extends WebPage {
         root.appendChild(item1);
         item1.appendChild(new ExtTreeNode("subitem11"));
         item1.appendChild(new ExtTreeNode("subitem12(click me)") {
-            @Override
+            private static final long serialVersionUID = 1L;
+			@Override
             protected void onClick(AjaxRequestTarget target) {
                 target.appendJavascript("alert('node.onClick: " + this.getText() + "');");
             }

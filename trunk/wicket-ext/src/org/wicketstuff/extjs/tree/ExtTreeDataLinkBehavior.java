@@ -38,10 +38,10 @@ public class ExtTreeDataLinkBehavior extends AbstractAjaxBehavior {
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = LoggerFactory.getLogger(ExtTreeDataLinkBehavior.class);
 
-	private ExtTreePanel provider;
+	private ExtAsyncTreePanel provider;
 	private static final String QUERY_PARAM = "node";
 
-	public ExtTreeDataLinkBehavior(ExtTreePanel dataSource) {
+	public ExtTreeDataLinkBehavior(ExtAsyncTreePanel dataSource) {
 		provider = dataSource;
 	}
 
@@ -66,13 +66,13 @@ public class ExtTreeDataLinkBehavior extends AbstractAjaxBehavior {
 				webResponse.setHeader("Expires", "Mon, 26 Jul 1997 05:00:00 GMT");
 				webResponse.setHeader("Cache-Control", "no-cache, must-revalidate");
 				webResponse.setHeader("Pragma", "no-cache");
-				//TODO implements other iterator parameters
-				Iterator<TreeNode> choices = provider.iterator(input);
-
+				ExtTreeNode expandedNode = provider.findNode(input);
+				Iterator<ExtTreeNode> choices = provider.iterator(expandedNode);
+								
 				webResponse.write("[");
-				while (choices.hasNext())
-				{
-					final TreeNode item = choices.next();
+				while (choices.hasNext()) {
+					final ExtTreeNode item = choices.next();
+					expandedNode.appendChild(item);
 					webResponse.write(item.toString());
 					if(choices.hasNext()) webResponse.write(",");
 				}
