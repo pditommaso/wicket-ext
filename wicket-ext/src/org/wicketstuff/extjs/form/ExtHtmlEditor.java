@@ -23,9 +23,15 @@ import org.apache.wicket.model.IModel;
 import org.wicketstuff.extjs.Config;
 import org.wicketstuff.extjs.behavior.ExtComponentBehavior;
 
+/**
+ * Ext based HTML editor. This component have to be applyed to a <code>TEXTAREA</code> markup element
+ * 
+ * @author Paolo Di Tommaso
+ *
+ */
 public class ExtHtmlEditor extends AbstractTextComponent {
 
-	private Config extOptions = new Config();
+	private Config extConfig = new Config();
 
 	public ExtHtmlEditor(String id) {
 		super(id);
@@ -34,7 +40,7 @@ public class ExtHtmlEditor extends AbstractTextComponent {
 
 	public ExtHtmlEditor(String id,Config options) {
 		super(id);
-		this.extOptions = options;
+		this.extConfig = options;
 		init();
 	}
 
@@ -44,7 +50,25 @@ public class ExtHtmlEditor extends AbstractTextComponent {
 	}
 
 	private void init() {
-		add( new ExtHtmlEditorBehavior(extOptions) );
+		setWidth(500);
+		setHeight(400);
+		add( new ExtHtmlEditorBehavior(extConfig) );
+	}
+
+	public ExtHtmlEditor setWidth( int width ) { 
+		extConfig.set("width", width);
+		return this;
+	}
+	
+	public ExtHtmlEditor setHeight( int height ) { 
+		extConfig.set("height", height);
+		return this;
+	}
+	
+	public ExtHtmlEditor setSize( int width, int height ) { 
+		setWidth(width);
+		setHeight(height);
+		return this;
 	}
 
 	@Override
@@ -73,29 +97,33 @@ class ExtHtmlEditorBehavior extends ExtComponentBehavior {
 	}
 
 	public ExtHtmlEditorBehavior(Config options) {
-		super("Ext.form.HtmlEditor");
-		super.config().putAll(options);
+		super("Ext.form.HtmlEditor",options);
 	}
 
+	/*
+	 * due a bug in Ext HtmlEditor size have to be defined invoking specific method setSize/setWidth/setHeight
+	 * see http://www.seancallan.com/?p=44
+	 */
 	@Override
-	protected final void onComponentTag(final ComponentTag tag)
-	{
-		super.onComponentTag(tag);
-		tag.setName("div");
-		tag.getAttributes().remove("name");
+	protected CharSequence onExtScript( Config config ) { 
+		config.set("value", getComponent().getModelObject());
+		
+		// get the width and remove from configuration options;
+		Integer width = config.get("width");
+		Integer height = config.get("height");
+
+		/* add the right rezie method to the main script */
+		StringBuilder script = new StringBuilder( super.onExtScript(config) );
+		if( width != null && height != null ) { 
+			script.append(".setSize(") .append(width) .append(",") .append( height ) .append(")");
+		}
+		else if( width != null ) { 
+			script.append(".setWidth(") .append(width) .append(")");
 	}
-
-	@Override
-	protected String getApplyMethod() {
-		return "renderTo";
+		else if ( height != null ) { 
+			script.append(".setHeight(") .append(height) .append(")");
 	}
-
-
-	@Override
-	protected void onExtConfig( Config config ) {
-		AbstractTextComponent comp = (AbstractTextComponent) getComponent();
-		config.set("name", comp.getId() );
-		config.set("value", comp.getModelObject());
+		return script;
 	}
 
 
