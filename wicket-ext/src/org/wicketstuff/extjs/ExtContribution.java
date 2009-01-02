@@ -16,6 +16,8 @@
 
 package org.wicketstuff.extjs;
 
+import java.io.Serializable;
+
 import org.apache.wicket.ResourceReference;
 import org.apache.wicket.markup.html.IHeaderContributor;
 
@@ -26,7 +28,7 @@ import org.apache.wicket.markup.html.IHeaderContributor;
  * @author Paolo Di Tommaso
  *
  */
-public interface ExtContribution {
+public interface ExtContribution extends Serializable {
 
 	/** The resource reference to the <code>ext-all.js</code> javascript resource */
 	ResourceReference EXT_ALL_JS();
