@@ -20,15 +20,15 @@ import java.io.Serializable;
 
 public class ExtLiteral implements Serializable {
 
-	private String literal;
+	private Object literal;
 
-	public ExtLiteral( String literal ) {
+	public ExtLiteral( Object literal ) { 
 		this.literal = literal;
 	}
 
 	@Override
 	public String toString() {
-		return literal;
+		return String.valueOf(literal);
 	}
 
 }

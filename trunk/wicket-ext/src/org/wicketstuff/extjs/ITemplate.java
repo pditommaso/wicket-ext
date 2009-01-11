@@ -16,6 +16,8 @@
 
 package org.wicketstuff.extjs;
 
+import java.io.Serializable;
+
 
 /**
  * Ext template interface to bind with rendering bahaviors
@@ -23,7 +25,7 @@ package org.wicketstuff.extjs;
  * @author Paolo Di Tommaso
  *
  */
-public interface ITemplate {
+public interface ITemplate extends Serializable {
 
 	XTemplate getXTemplate();
 
