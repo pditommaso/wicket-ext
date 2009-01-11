@@ -39,7 +39,7 @@ public class ExtContributionFactory {
 	private static final Logger log = LoggerFactory.getLogger(ExtContributionFactory.class);
 
 	/**
-	 * Defauld load strategy
+	 * Default load strategy
 	 */
 	public ExtContribution load() {
 		Enumeration<URL> resources;

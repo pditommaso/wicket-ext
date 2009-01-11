@@ -50,7 +50,7 @@ public class Config  implements Serializable, Map<String,Object> {
 
 	@SuppressWarnings("unchecked")
 	public <T> T get( String name ) {
-		return (T)map.get(name);
+		return (T) map.get(name);
 	}
 
 	public Config set(String name, Object value ) {
@@ -85,6 +85,11 @@ public class Config  implements Serializable, Map<String,Object> {
 		if( !map.containsKey(key) ) {
 			map.put(key, value);
 		}
+		return this;
+	}
+
+	public Config putLiteral( String key, Object value ) { 
+		map.put(key, new ExtLiteral(value));
 		return this;
 	}
 
