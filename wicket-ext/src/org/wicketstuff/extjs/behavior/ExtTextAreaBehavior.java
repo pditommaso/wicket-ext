@@ -19,15 +19,40 @@ package org.wicketstuff.extjs.behavior;
 import org.wicketstuff.extjs.Config;
 
 
+/** 
+ * Apply the Ext TextArea component to a Wicket TextArea
+ */
 public class ExtTextAreaBehavior extends ExtComponentBehavior {
 
-
-	public ExtTextAreaBehavior() {
+	public ExtTextAreaBehavior() { 
 		super("Ext.form.TextArea");
 	}
 
-	public ExtTextAreaBehavior(Config options) {
+	public ExtTextAreaBehavior(Config options) { 
 		super("Ext.form.TextArea", options);
 	}
+	
+	/**
+	 * @param grow <code>true</code> if this field should automatically grow and shrink to its content
+	 */
+	public ExtTextAreaBehavior setGrow( boolean grow ) { 
+		config().set("grow", grow);
+		return this;
+	}
+	
+	/**
+	 * @param rows The maximum height to allow when grow = true (defaults to 1000) 
+	 */
+	public ExtTextAreaBehavior setGrowMax( int heigth ) { 
+		config().set("growMax", heigth);
+		return this;
+	}
 
+	/**
+	 * @param rows The minimum height to allow when grow = true (defaults to 60) 
+	 */
+	public ExtTextAreaBehavior setGrowMin( int height ) { 
+		config().set("growMin", height);
+		return this;
+	}
 }

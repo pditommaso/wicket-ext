@@ -33,17 +33,17 @@ import org.apache.wicket.util.string.JavascriptUtils;
 import org.wicketstuff.extjs.Config;
 import org.wicketstuff.extjs.Ext;
 
-/**
- * Base class for Ext behaviors
- *
+/** 
+ * Base class for Ext behaviors 
+ * 
  * @author Paolo Di Tommaso
  *
  */
 public abstract class ExtAbstractBehavior extends AbstractAjaxBehavior {
 
-
+	
 	private final Config config;
-
+	
 	public ExtAbstractBehavior() {
 		config = new Config();
 	}
@@ -51,18 +51,18 @@ public abstract class ExtAbstractBehavior extends AbstractAjaxBehavior {
 	public ExtAbstractBehavior( Config options ) {
 		config = options;
 	}
-
+	
 	/**
 	 * Bind the compont to this behavior. This method will add Ext resources contribution
 	 */
 	@Override
-	public void onBind() {
+	public void onBind() { 
 		getComponent().setOutputMarkupId(true);
 	}
-
+	
 	/**
 	 * Render the Ext component in the page header on a DOM Ready event
-	 *
+	 * 
 	 * @see {@link #renderExtScript()}
 	 */
 	@Override
@@ -79,8 +79,8 @@ public abstract class ExtAbstractBehavior extends AbstractAjaxBehavior {
 		{
 			response.renderJavascriptReference(new JavascriptResourceReference(AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js"));
 			response.renderJavascript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
-		}
-
+	}
+	
 		/*
 		 * Ext resources contributions
 		 */
@@ -95,7 +95,7 @@ public abstract class ExtAbstractBehavior extends AbstractAjaxBehavior {
 	protected void onComponentRendered() {
 
 		CharSequence script = renderExtScript();
-		if( script != null ) {
+		if( script != null ) { 
 			Response response = getComponent().getResponse();
 			response.write( "\n" );
 			response.write( JavascriptUtils.SCRIPT_OPEN_TAG );
@@ -103,7 +103,7 @@ public abstract class ExtAbstractBehavior extends AbstractAjaxBehavior {
 			response.write( JavascriptUtils.SCRIPT_CLOSE_TAG );
 		}
 	}
-
+	
 
 	/**
 	 * @return the configuration to be provided to the Ext component
@@ -116,8 +116,8 @@ public abstract class ExtAbstractBehavior extends AbstractAjaxBehavior {
 	 * @return the JavaScript Ext component to be rendered in the page header
 	 */
 	protected abstract CharSequence renderExtScript();
-
-
+	
+	
 	public final void onRequest()
 	{
 		WebApplication app = (WebApplication)getComponent().getApplication();
@@ -127,7 +127,8 @@ public abstract class ExtAbstractBehavior extends AbstractAjaxBehavior {
 	}
 
 	protected void onEvent(AjaxRequestTarget target) { }
-
-
+	
+	
 
 }
+ 

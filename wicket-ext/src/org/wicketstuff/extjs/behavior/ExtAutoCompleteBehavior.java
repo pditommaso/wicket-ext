@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.wicket.RequestCycle;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.behavior.HeaderContributor;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.util.template.TextTemplateHeaderContributor;
 import org.wicketstuff.extjs.Config;
@@ -34,18 +35,20 @@ public abstract class ExtAutoCompleteBehavior extends ExtComponentBehavior {
 
 
 	private static final String QUERY_PARAM = "key";
-
-	private static final String ON_SELECT_DEFAULT =
+	
+	private static final String ON_SELECT_DEFAULT = 
 			"if(this.fireEvent('beforeselect', this, record, index) !== false){ "+
 			"var curnt = this.getValue();"+
 			"var value = record.data[this.valueField || this.displayField];" +
-			"if (this.sep) { this.replaceActiveEntry(value); } " +
+			"if (this.sep) { this.replaceActiveEntry(value); } " + 
 			"else { this.setValue(value); }" +
 			"this.collapse();"+
 			"this.fireEvent('select', this, record, index);"+
 			"if (curnt != this.getValue()){ this.fireEvent('change', this, this.getValue(), curnt); } "+
 			"}; ";
 
+	private boolean isMultiAutocomplete;
+	
 	public ExtAutoCompleteBehavior() {
 			super("Ext.form.ComboBox");
 	}
@@ -53,18 +56,30 @@ public abstract class ExtAutoCompleteBehavior extends ExtComponentBehavior {
 	public ExtAutoCompleteBehavior(Config options) {
 		super("Ext.form.ComboBox", options);
 	}
-
+	
+	public ExtAutoCompleteBehavior(Config options, boolean isMultiAutocomplete) { 
+		super( isMultiAutocomplete ? "Ext.form.AutoComplete" : "Ext.form.ComboBox", options);
+		this.isMultiAutocomplete = isMultiAutocomplete;
+	}
+	
 	@Override
-	public void onBind() {
+	public void onBind() { 
 		super.onBind();
-		/* Fix  for component positioning on IE
+		/* Fix  for component positioning on IE 
 		 *	See https://extjs.com/forum/showthread.php?p=204826
 		 */
 		getComponent().add( TextTemplateHeaderContributor.forJavaScript(ExtAutoCompleteBehavior.class, "triggerfield_patch.js", new Model()) );
+		if( isMultiAutocomplete ) { 
+			getComponent().add( HeaderContributor.forJavaScript(ExtAutoCompleteBehavior.class, "autocomplete.js") );
+		}
 	}
-
-
-	/**
+	
+	public ExtAutoCompleteBehavior setItemSelector( String itemSelector ) { 
+		config().set("itemSelector", itemSelector);
+		return this;
+	}
+	
+	/** 
 	 * This ajax behaviour handle the drop-down selection change
 	 */
 	@Override
@@ -72,7 +87,7 @@ public abstract class ExtAutoCompleteBehavior extends ExtComponentBehavior {
 		String key = RequestCycle.get().getRequest().getParameter(QUERY_PARAM);
 		onSelect( target, key );
 	}
-
+	
 	protected abstract void onSelect(AjaxRequestTarget target, String key);
 
 	protected abstract ITemplate getTemplate();
@@ -80,9 +95,9 @@ public abstract class ExtAutoCompleteBehavior extends ExtComponentBehavior {
 	protected abstract ExtDataLink getDataLink();
 
 	@Override
-	protected void onExtConfig( Config config ) {
+	protected void onExtConfig( Config config ) { 
 		super.onExtConfig(config);
-
+		
 		/* default properties */
 		config.putIfNotExists("typeAhead", false);
 		config.putIfNotExists("minChars", 1);
@@ -99,7 +114,7 @@ public abstract class ExtAutoCompleteBehavior extends ExtComponentBehavior {
 		params.put(QUERY_PARAM, Ext.literal("record.id") );
 		WicketCallBuilder ajax = new WicketCallBuilder(url);
 		ajax.append(params);
-
+		
 		config.set("onSelect", new ExtFunction("record,index", ON_SELECT_DEFAULT + ajax ) );
 
 		ITemplate template = getTemplate();
@@ -115,6 +130,5 @@ public abstract class ExtAutoCompleteBehavior extends ExtComponentBehavior {
 		}
 
 	}
-
+	
 }
-
