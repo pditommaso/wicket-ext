@@ -8,7 +8,7 @@ import org.apache.wicket.util.string.Strings;
 import org.wicketstuff.extjs.ExtTemplate;
 import org.wicketstuff.extjs.data.ObjectMap;
 import org.wicketstuff.extjs.grid.ExtDataView;
-import org.wicketstuff.extjs.xu.grid.ExtSearchDataView;
+import org.wicketstuff.extjs.ux.grid.ExtSearchDataView;
 
 public class DataViewPage extends WebPage {
 
