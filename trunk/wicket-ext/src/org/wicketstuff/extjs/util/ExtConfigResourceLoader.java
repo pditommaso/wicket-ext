@@ -103,39 +103,22 @@ public class ExtConfigResourceLoader
 			return;
 		}
 
-		while (true)
+		// Create the base path
+		String path = clazz.getName().replace('.', '/');
+
+		// Iterator over all the combinations
+		ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, "properties,xml");
+		while (iter.hasNext())
 		{
-			// Create the base path
-			String path = clazz.getName().replace('.', '/');
+			String newPath = (String)iter.next();
 
-			// Iterator over all the combinations
-			ResourceNameIterator iter = new ResourceNameIterator(path, style, locale, "properties,xml");
-			while (iter.hasNext())
+			final Properties props = loadProps(clazz, newPath);
+			if (props != null)
 			{
-				String newPath = (String)iter.next();
-
-				final Properties props = loadProps(clazz, newPath);
-				if (props != null)
-				{
-					matchProps(props,keyPrefix,config);
-				}
-			}
-
-			// Didn't find the key yet, continue searching if possible
-			if (isStopResourceSearch(clazz))
-			{
-				break;
-			}
-
-			// Move to the next superclass
-			clazz = clazz.getSuperclass();
-
-			if (clazz == null)
-			{
-				// nothing more to search, done
-				break;
+				matchProps(props,keyPrefix,config);
 			}
 		}
+
 	}
 
 	private Properties loadProps( Class clazz, String newPath ) {

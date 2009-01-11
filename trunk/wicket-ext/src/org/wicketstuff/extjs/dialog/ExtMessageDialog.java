@@ -72,11 +72,21 @@ public class ExtMessageDialog extends WebMarkupContainer {
 	 * @param title the dialog string title
 	 * @param message the dialog content message
 	 */
-	public void confim( AjaxRequestTarget target, String title, String message ) {
+	public void confirm( AjaxRequestTarget target, String title, String message ) {
 		Config config = new Config( MessageType.CONFIRM.config() );
-		config.put("title",title);
-		config.put("msg",message);
+		config.put("title", title);
+		config.put("msg", escape(message));
 		show(target,config);
+	}
+
+	/**
+	 * Displays a <i>Confirm</i> dialog
+	 *
+	 * @param target the current ajax request target
+	 * @param message the dialog content message
+	 */
+	public void confirm( AjaxRequestTarget target, String message ) {
+		confirm(target, "COIN", message);
 	}
 
 	/**
@@ -87,7 +97,7 @@ public class ExtMessageDialog extends WebMarkupContainer {
 	 * @param message the prompt dialog message string
 	 */
 	public void prompt( AjaxRequestTarget target, String title, String message  ) {
-		prompt(target,title,message,"", false);
+		prompt(target, title, escape(message), "", false);
 	}
 
 	/**
@@ -101,11 +111,11 @@ public class ExtMessageDialog extends WebMarkupContainer {
 	 */
 	public void prompt( AjaxRequestTarget target, String title, String message, String defValue, boolean isMultiline  ) {
 		Config config = new Config( MessageType.PROMPT.config() );
-		config.put("title",title);
-		config.put("msg",message);
+		config.put("title", title);
+		config.put("msg", message);
 		config.put("multiline", isMultiline);
 		config.put("value", defValue);
-		show(target,config);
+		show(target, config);
 	}
 
 	/**
@@ -117,9 +127,19 @@ public class ExtMessageDialog extends WebMarkupContainer {
 	 */
 	public void alert( AjaxRequestTarget target, String title, String message  ) {
 		Config config = new Config( MessageType.ALERT.config() );
-		config.put("title",title);
-		config.put("msg",message);
-		show(target,config);
+		config.put("title", title);
+		config.put("msg", escape(message));
+		show(target, config);
+	}
+
+	/**
+	 * Display an <i>Alert</i> Dialog
+	 *
+	 * @param target the current ajax request target
+	 * @param message the alert dialog message string
+	 */
+	public void alert( AjaxRequestTarget target, String message  ) {
+		alert(target, "COIN", message);
 	}
 
 	/**
@@ -132,5 +152,16 @@ public class ExtMessageDialog extends WebMarkupContainer {
 		String script = handler.dialogScript(config);
 		target.appendJavascript(script);
 	}
+
+	/**
+	 * Escape a string to make it Ext friendly.
+	 *
+	 * @param script The string to escape. Using a null string will raise a {@link NullPointerException}
+	 * @return The escaped string
+	 */
+	private String escape( String message ) {
+		return message.replaceAll("\\r\\n|\\r|\\n", "<br/>");
+	}
+
 
 }

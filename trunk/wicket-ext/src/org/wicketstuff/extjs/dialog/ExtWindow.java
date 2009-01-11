@@ -73,6 +73,7 @@ public class ExtWindow extends ExtContainer {
 		window.config().set("modal", modal);
 	}
 
+	@Deprecated
 	public void setBodyStyle(String style) {
 		window.config().set("bodyStyle", style);
 	}
