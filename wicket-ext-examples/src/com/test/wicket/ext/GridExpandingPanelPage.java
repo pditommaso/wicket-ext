@@ -6,7 +6,7 @@ import org.apache.wicket.markup.html.WebPage;
 import org.wicketstuff.extjs.ExtTemplate;
 import org.wicketstuff.extjs.data.ObjectMap;
 import org.wicketstuff.extjs.grid.ColumnMap;
-import org.wicketstuff.extjs.xu.grid.ExtExpandingGridView;
+import org.wicketstuff.extjs.ux.grid.ExtExpandingGridView;
 
 public class GridExpandingPanelPage extends WebPage {
 

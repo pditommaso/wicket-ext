@@ -2,7 +2,7 @@ package com.test.wicket.ext;
 
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.wicketstuff.extjs.xu.behavior.ExtTableGridBehavior;
+import org.wicketstuff.extjs.ux.behavior.ExtTableGridBehavior;
 
 public class TablePage extends WebPage {
 
