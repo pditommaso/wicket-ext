@@ -100,7 +100,8 @@ public abstract class ExtDataView<T> extends ExtAbstractDataContainer<T> {
 	}
 
 	public boolean getAutoScroll() {
-		return config().get("autoScroll");
+		Boolean result = config().get("autoScroll");
+		return result != null ? result.booleanValue() : false;
 	}
 
 	protected Object getTopBar() {
