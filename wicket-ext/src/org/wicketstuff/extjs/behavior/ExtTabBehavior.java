@@ -33,13 +33,12 @@ public class ExtTabBehavior extends AbstractBehavior {
     this.title = title;
   }
 
-  @Override
   public void bind(Component component) {
-    super.bind(component);
-    component.add(new AttributeAppender("class", new Model("x-tab"), " "));
-    if (title != null) {
-      component.add(new AttributeModifier("title",true, new Model(title)));
-    }
+      super.bind(component);
+      component.setOutputMarkupId(true);
+      component.add(new AttributeAppender("class", new Model("x-tab"), " "));
+      if (title != null) {
+          component.add(new AttributeModifier("title",true, new Model(title)));
+      }
   }
-
 }

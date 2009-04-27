@@ -50,13 +50,14 @@ public class ExtComponentBehavior extends ExtAbstractBehavior {
 		super(options);
 		this.extClassName = theFullyQualifiedExtClassName;
 	}
-	
+
 	public final String getExtClassName() { 
 		return extClassName;
 	}
 
 	
 	final protected ExtClass create( Config options ) {
+                options.set("id", getComponent().getMarkupId());
 		options.set( getApplyMethod(), getApplyId() );
 		return new ExtClass(extClassName, options);
 	}
