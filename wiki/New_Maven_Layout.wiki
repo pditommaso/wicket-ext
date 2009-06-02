@@ -7,7 +7,7 @@ I've tried to make of more maven friendly layout for the project. I hope this wi
 
 = Details =
 
-First, on your local pc make a directory where you will get the two parts of the projets. Let's call it _wicket-ext-all_.
+First, on your local pc make a directory where you will get the two parts of the project. Let's call it _wicket-ext-all_.
 
 Go in _wicket-ext-all_ and make the two commands :
   * svn co http://wicket-ext.googlecode.com/svn/branches/newMavenLayout wicket-ext
@@ -33,7 +33,7 @@ Now to use wicket-ext in a maven project, using transitive dependencies, simply 
 
 {{{
 <dependency>
-  <groupId>${project.groupId}</groupId>
+  <groupId>org.wicketstuff</groupId>
   <artifactId>wicket-ext-bundle</artifactId>
   <version>${project.version}</version>
 </dependency>
