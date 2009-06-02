@@ -27,5 +27,18 @@ To launch examples, go into wicket-ext-examples and make a _mvn jetty:run-explod
 
 Well, more of that, the pom.xml of wicket-ext-superpom has all properties that define wich version of wicket is used and so on. 
 
+= Using wicket-ext in a project =
+
+Now to use wicket-ext in a maven project, using transitive dependencies, simply add:
+
+{{{
+<dependency>
+  <groupId>${project.groupId}</groupId>
+  <artifactId>wicket-ext-bundle</artifactId>
+  <version>${project.version}</version>
+</dependency>
+}}} 
+
+here for the moment ${project.version} is 0.6.1-newMavenLayout-SNAPSHOT.
 
 This is surely not perfect for the moment, I'm waiting formyour comments ;)
