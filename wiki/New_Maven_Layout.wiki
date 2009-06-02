@@ -1,11 +1,13 @@
-#Describe how to build from the new maven layout
+= Getting Started =
 
-= Introduction =
+This project describe how to download, build and run examples quickly on your machine.
 
-I've tried to make of more maven friendly layout for the project. I hope this will help in futur developpement and make build easier.
+== Prerequisites ==
 
-
-= Details =
+* Java 5 or greater installed 
+* Maven 2.0.x or greater installed 
+ 
+== Details ==
 
 First, on your local pc make a directory where you will get the two parts of the project. Let's call it _wicket-ext-all_.
 
@@ -19,15 +21,15 @@ _(Of course if you have rigths to write use https instead of the readonly http)_
 
 
 
-This will create the two directories for the two parts of the project. Now you can go inside wicket-ext and make a simple _mvn clean install_ . Everything is building and testing ! _(wicket-ext-bundle is view as a module from wicket-ext)_ . 
+This will create the two directories for the two parts of the project. Now you can go inside wicket-ext and make a simple _mvn clean install_ . Everything is building and testing! _(wicket-ext-bundle is view as a module from wicket-ext)_ . 
 
 To create all files needed by eclipse juste do a _mvn eclipse:clean eclipse:m2eclipse_ from the same place.
 
-To launch examples, go into wicket-ext-examples and make a _mvn jetty:run-exploded_, it works like a charm :).
+To launch examples, go into _wicket-ext-examples_ and make a _mvn jetty:run-exploded_, it works like a charm, when it finish open your browser at the following address http://localhost:8080/wicket-ext-examples/ .. enjoy!
 
 Well, more of that, the pom.xml of wicket-ext-superpom has all properties that define wich version of wicket is used and so on. 
 
-= Using wicket-ext in a project =
+== Using wicket-ext in a project ==
 
 Now to use wicket-ext in a maven project, using transitive dependencies, simply add:
 
@@ -41,4 +43,4 @@ Now to use wicket-ext in a maven project, using transitive dependencies, simply 
 
 here for the moment ${project.version} is 0.6.1-newMavenLayout-SNAPSHOT.
 
-This is surely not perfect for the moment, I'm waiting formyour comments ;)
+This is surely not perfect for the moment, I'm waiting for your comments ;)
