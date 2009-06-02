@@ -4,14 +4,14 @@ This project describe how to download, build and run examples quickly on your ma
 
 == Prerequisites ==
 
-* Java 5 or greater installed 
-* Maven 2.0.x or greater installed 
+ * Java 5 or greater installed 
+ * Maven 2.0.x or greater installed 
  
 == Details ==
 
 First, on your local pc make a directory where you will get the two parts of the project. Let's call it _wicket-ext-all_.
 
-Go in _wicket-ext-all_ and make the two commands :
+Go in _wicket-ext-all_ and make the two commands:
   * svn co http://wicket-ext.googlecode.com/svn/branches/newMavenLayout wicket-ext
   * svn co http://wicket-ext-bundle.googlecode.com/svn/branches/newMavenLayout wicket-ext-bundle
 
