@@ -53,7 +53,7 @@ public abstract class ExtAbstractBehavior extends AbstractAjaxBehavior {
 	}
 	
 	/**
-	 * Bind the compont to this behavior. This method will add Ext resources contribution
+	 * Bind the component to this behavior. This method will add Ext resources contribution
 	 */
 	@Override
 	public void onBind() { 
@@ -79,7 +79,7 @@ public abstract class ExtAbstractBehavior extends AbstractAjaxBehavior {
 		{
 			response.renderJavascriptReference(new JavascriptResourceReference(AbstractDefaultAjaxBehavior.class, "wicket-ajax-debug.js"));
 			response.renderJavascript("wicketAjaxDebugEnable=true;", "wicket-ajax-debug-enable");
-	}
+		}
 	
 		/*
 		 * Ext resources contributions
