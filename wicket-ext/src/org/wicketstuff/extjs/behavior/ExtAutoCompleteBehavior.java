@@ -65,10 +65,6 @@ public abstract class ExtAutoCompleteBehavior extends ExtComponentBehavior {
 	@Override
 	public void onBind() { 
 		super.onBind();
-		/* Fix  for component positioning on IE 
-		 *	See https://extjs.com/forum/showthread.php?p=204826
-		 */
-		getComponent().add( TextTemplateHeaderContributor.forJavaScript(ExtAutoCompleteBehavior.class, "triggerfield_patch.js", new Model()) );
 		if( isMultiAutocomplete ) { 
 			getComponent().add( HeaderContributor.forJavaScript(ExtAutoCompleteBehavior.class, "autocomplete.js") );
 		}
