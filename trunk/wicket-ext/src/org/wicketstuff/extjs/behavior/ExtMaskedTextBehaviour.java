@@ -41,7 +41,7 @@ public class ExtMaskedTextBehaviour extends ExtComponentBehavior {
 
 	@Override
 	protected void onExtConfig( Config options ) {
-		options.set("maskRe",new ExtClass("RegExp",new String(mask)));
+		options.set("maskRe",new ExtClass("RegExp",mask));
 	}
 
 }
