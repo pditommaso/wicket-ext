@@ -45,7 +45,7 @@ public class ExtSlider extends WebMarkupContainer {
 	}
 
 	public ExtSlider(String id) {
-		super(id, new Model(new Integer(0)));
+		super(id, new Model(Integer.valueOf(0)));
 		init();
 	}
 
