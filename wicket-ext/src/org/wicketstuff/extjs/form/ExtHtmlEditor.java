@@ -32,12 +32,12 @@ import org.wicketstuff.extjs.behavior.ExtComponentBehavior;
 public class ExtHtmlEditor extends AbstractTextComponent {
 
 	private Config extConfig = new Config();
-
+	
 	public ExtHtmlEditor(String id) {
 		super(id);
 		init();
 	}
-
+	
 	public ExtHtmlEditor(String id,Config options) {
 		super(id);
 		this.extConfig = options;
@@ -70,61 +70,93 @@ public class ExtHtmlEditor extends AbstractTextComponent {
 		setHeight(height);
 		return this;
 	}
-
+	
 	@Override
 	protected final void onComponentTagBody(final MarkupStream markupStream, final ComponentTag openTag)
 	{
 		replaceComponentTagBody(markupStream, openTag, "");
-	}
-
-}
-
-
-class ExtHtmlEditorBehavior extends ExtComponentBehavior {
-
-
-	@Override
-	public void onBind() {
-		super.onBind();
-
-		if( !(getComponent() instanceof AbstractTextComponent) ) {
-			throw new RuntimeException("ExtHtmlEditorBehavior can be applyed only to AbstractTextComponent or subclass");
-		}
-	}
-
-	public ExtHtmlEditorBehavior() {
-		super("Ext.form.HtmlEditor");
-	}
-
-	public ExtHtmlEditorBehavior(Config options) {
-		super("Ext.form.HtmlEditor",options);
-	}
-
-	/*
-	 * due a bug in Ext HtmlEditor size have to be defined invoking specific method setSize/setWidth/setHeight
-	 * see http://www.seancallan.com/?p=44
-	 */
-	@Override
-	protected CharSequence onExtScript( Config config ) { 
-		config.set("value", getComponent().getModelObject());
 		
-		// get the width and remove from configuration options;
-		Integer width = config.get("width");
-		Integer height = config.get("height");
+	}
+	
+	
 
-		/* add the right rezie method to the main script */
-		StringBuilder script = new StringBuilder( super.onExtScript(config) );
-		if( width != null && height != null ) { 
-			script.append(".setSize(") .append(width) .append(",") .append( height ) .append(")");
-		}
-		else if( width != null ) { 
-			script.append(".setWidth(") .append(width) .append(")");
-	}
-		else if ( height != null ) { 
-			script.append(".setHeight(") .append(height) .append(")");
-	}
+	public CharSequence onExtScript(Config config, CharSequence script) {
 		return script;
 	}
 
+	
+	class ExtHtmlEditorBehavior extends ExtComponentBehavior {
 
+
+		private String contentId;
+
+		@Override
+		public void onBind() { 
+			super.onBind();
+			if( !(getComponent() instanceof AbstractTextComponent) ) { 
+				throw new RuntimeException("ExtHtmlEditorBehavior can be applyed only to AbstractTextComponent or subclass");
+			}
+			contentId = "content:" + getMarkupId();
+
+		}
+		
+		public ExtHtmlEditorBehavior() {
+			super("Ext.form.HtmlEditor");
+		}
+		
+		public ExtHtmlEditorBehavior(Config options) {
+			super("Ext.form.HtmlEditor",options);
+		}
+
+
+		@Override
+		protected void onComponentTag(ComponentTag tag) {
+			super.onComponentTag(tag);
+		}		
+
+		@Override
+		protected void onComponentRendered() {
+			try { 
+				/* render the component content model object in a separate hidden div to be 
+				 * referenced in ext config by code  
+				 */
+				Object content = getModelObject();
+				getResponse().write(String.format("\n<div id='%s' style='display:none'>", contentId));
+				getResponse().write( content != null ? content.toString() : "" );
+				getResponse().write("</div>");
+			}
+			finally { 
+				super.onComponentRendered();
+			}
+		}
+		
+		/*
+		 * due a bug in Ext HtmlEditor size have to be defined invoking specific method setSize/setWidth/setHeight
+		 * see http://www.seancallan.com/?p=44
+		 */
+		@Override
+		protected CharSequence onExtScript( Config config ) { 
+			config.putLiteral("value", String.format("Ext.get('%s').dom.innerHTML",contentId));
+			
+			// get the width and remove from configuration options;
+			Integer width = config.get("width");
+			Integer height = config.get("height");
+
+			/* add the right rezie method to the main script */
+			StringBuilder script = new StringBuilder( super.onExtScript(config) );
+			if( width != null && height != null ) { 
+				script.append(".setSize(") .append(width) .append(",") .append( height ) .append(")");
+			}
+			else if( width != null ) { 
+				script.append(".setWidth(") .append(width) .append(")");
+			}
+			else if ( height != null ) { 
+				script.append(".setHeight(") .append(height) .append(")");
+			}
+			
+			return ExtHtmlEditor.this.onExtScript(config, script);
+		}
+
+	}	
 }
+
