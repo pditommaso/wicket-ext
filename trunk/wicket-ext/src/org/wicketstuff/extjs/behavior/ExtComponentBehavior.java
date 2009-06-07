@@ -57,7 +57,6 @@ public class ExtComponentBehavior extends ExtAbstractBehavior {
 
 	
 	final protected ExtClass create( Config options ) {
-                options.set("id", getComponent().getMarkupId());
 		options.set( getApplyMethod(), getApplyId() );
 		return new ExtClass(extClassName, options);
 	}
