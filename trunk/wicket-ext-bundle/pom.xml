@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>wicket-ext-bundle</artifactId>
+  <packaging>jar</packaging>
+  <name>wicket-ext-bundle</name>
+  <url>http://maven.apache.org</url>
+  
+  <parent>
+    <groupId>org.wicketstuff</groupId>
+    <artifactId>wicket-ext-all</artifactId>
+    <version>0.6.2-SNAPSHOT</version>
+  </parent>
+
+  <dependencies>
+      <dependency>
+      <groupId>org.apache.wicket</groupId>
+      <artifactId>wicket</artifactId>
+    </dependency> 
+     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency> 
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>wicket-ext-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+	        <version>${testng.version}</version>
+      <classifier>jdk15</classifier>
+      <scope>test</scope>
+
+    </dependency>
+	</dependencies>
+</project>
