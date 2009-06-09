@@ -26,7 +26,9 @@ import org.wicketstuff.extjs.Config;
 
 public class ExtTabbedPanelBehavior extends ExtComponentBehavior {
 
-  private boolean autoTagComponents;
+	private static final long serialVersionUID = 1L;
+
+	private boolean autoTagComponents;
 
   public ExtTabbedPanelBehavior(Config config) {
     super("Ext.TabPanel", config);

@@ -31,6 +31,8 @@ import org.wicketstuff.extjs.ExtClass;
 
 public class ExtMaskedTextBehaviour extends ExtComponentBehavior {
 
+	private static final long serialVersionUID = 1L;
+
 	String mask;
 
 	public ExtMaskedTextBehaviour(String regExpMask){
