@@ -7,7 +7,7 @@ public class ServerStart {
 
 	public static void main( String[] args ) { 
 		Server server = new Server(8080);
-		new WebAppContext(server, "WebContent", "/");
+		new WebAppContext(server, "src/main/webapp", "/");
 
 		try
 		{
