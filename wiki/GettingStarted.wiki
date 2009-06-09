@@ -1,36 +1,39 @@
-= Getting Started =
-
 This project describe how to download, build and run examples quickly on your machine.
 
-== Prerequisites ==
+=== Prerequisites ===
 
  * Java 5 or greater installed 
  * Maven 2.0.x or greater installed 
  
-== Details ==
+=== Details ===
 
 First, on your local machine make a directory where you will get the three modules of the project. Let's call it {{{wicket-ext-all}}}.
 
 Go in {{{wicket-ext-all}}} and write the following command:
-  * svn checkout http://wicket-ext.googlecode.com/svn/trunk/ .
+{{{
+svn checkout http://wicket-ext.googlecode.com/svn/trunk/ .
+}}}
+
+_(Please note the command ends with a dot character)_.
+
 
 _(Of course if you have rights to write use https instead of the readonly http)_.
 
 
 This will create and download the following project modules
-  * wicket-ext - _the project core module_
-  * wicket-ext-bundle - _contains the Extjs resources, this is released only to run examples and you should use your Ext resource bundle in your implementation_  
-  * wicket-ext-examples - _the example components gallery_
+  * *wicket-ext* _the project core module_
+  * *wicket-ext-bundle* _contains the Extjs resources, this is released only to run examples and you should use your Ext resource bundle in your implementation_  
+  * *wicket-ext-examples* _the example components gallery_
 
 Now from the project root make a simple {{{mvn clean install}}}. Everything will build and tested!  
 
 To launch examples, go into {{{wicket-ext-examples}}} and make a {{{mvn jetty:run-exploded}}}, it works like a charm, when it finish open your browser at the following address http://localhost:8080/wicket-ext-examples/ .. enjoy!
 
-To create all files needed by eclipse just do a {{{mvn eclipse:clean eclipse:m2eclipse}}} from the project root.
+To create all files required by eclipse just do a {{{mvn eclipse:clean eclipse:m2eclipse}}} from the project root.
 
-Then open Eclipse and imports the three modules as Maven projects. That's all!
+Then open Eclipse and import the three modules as Maven projects. That's all!
 
-Well, more of that, the pom.xml of {{{wicket-ext-superpom}}} has all properties that define which version of wicket is used and so on. 
+Well, more of that, the pom.xml of {{{wicket-ext-superpom}}} has all properties that define which version of Wicket is used and so on. 
 
 == Using wicket-ext in a project ==
 
