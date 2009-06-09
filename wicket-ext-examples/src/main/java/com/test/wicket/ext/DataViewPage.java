@@ -23,7 +23,6 @@ public class DataViewPage extends WebPage {
 
 			public Integer totalRecords() { return total; }
 
-			@Override
 			public Iterator<DataBean> iterator(Query query) {
 				Integer start = query.getStart() != null ? query.getStart() : 0;
 				Integer count = query.getLimit() != null ? query.getLimit() : 100;
@@ -37,7 +36,6 @@ public class DataViewPage extends WebPage {
 				return DataHelper.page(list,start,count).iterator();
 			}
 
-			@Override
 			public ObjectMap mapObject(DataBean bean, Integer index) {
 				ObjectMap obj = new ObjectMap("company","price","change","industry");
 				if( bean!= null ) {
