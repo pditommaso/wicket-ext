@@ -35,7 +35,7 @@ Then open Eclipse and import the three modules as Maven projects. That's all!
 
 Well, more of that, the pom.xml of {{{wicket-ext-superpom}}} has all properties that define which version of Wicket is used and so on. 
 
-== Using wicket-ext in a project ==
+=== Using Wicket-ext in a project ===
 
 Now to use {{{wicket-ext}}} in a maven project, using transitive dependencies, simply add:
 
