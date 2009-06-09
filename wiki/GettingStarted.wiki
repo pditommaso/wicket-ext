@@ -1,4 +1,4 @@
-This project describe how to download, build and run examples quickly on your machine.
+This page describe how to download, build and run examples quickly on your machine.
 
 === Prerequisites ===
 
