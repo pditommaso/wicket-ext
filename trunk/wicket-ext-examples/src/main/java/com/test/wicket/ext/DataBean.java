@@ -158,7 +158,6 @@ class DataHelper {
 
 		Collections.sort(result, new Comparator<T>() {
 
-			@Override
 			public int compare(T o1, T o2) {
 				Comparable v1 = value(o1,sort);
 				Comparable v2 = value(o2,sort);

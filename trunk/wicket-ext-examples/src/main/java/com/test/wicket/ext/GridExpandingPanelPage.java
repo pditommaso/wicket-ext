@@ -42,7 +42,6 @@ public class GridExpandingPanelPage extends WebPage {
 
 			public Integer totalRecords() { return DataHelper.list().size(); }
 
-			@Override
 			public Iterator<DataBean> iterator(Query query) {
 				Integer start = query.getStart() != null ? query.getStart() : 0;
 				Integer count = query.getLimit() != null ? query.getLimit() : 100;
