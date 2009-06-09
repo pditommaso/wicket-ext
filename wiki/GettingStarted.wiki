@@ -27,7 +27,11 @@ This will create and download the following project modules
 
 Now from the project root make a simple {{{mvn clean install}}}. Everything will build and tested!  
 
-To launch examples, go into {{{wicket-ext-examples}}} and make a {{{mvn jetty:run-exploded}}}, it works like a charm, when it finish open your browser at the following address http://localhost:8080/wicket-ext-examples/ .. enjoy!
+To launch examples, go into {{{wicket-ext-examples}}} and make a {{{mvn jetty:run-exploded}}}, it works like a charm, when it finish open your browser at the following address 
+{{{
+http://localhost:8080/wicket-ext-examples/
+}}}
+ .. enjoy!
 
 To create all files required by eclipse just do a {{{mvn eclipse:clean eclipse:m2eclipse}}} from the project root.
 
