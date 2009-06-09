@@ -1,0 +1,11 @@
+This project is released under Apache 2.0 licence. 
+
+However the module {{{wicket-ext-bundle}}} is released with GPLv3 licence due to ExtJS license requirements.
+
+Please note that module {{{wicket-ext-bundle}}} is not required by the main project trunk. This is released as reference implementation and it should be used only for evaluation. In your real project you have create your resources bundle downloading ExtJS code from their website at http://extjs.com.
+
+
+More information about Extjs licence:
+  * http://extjs.com/products/license.php
+  * http://www.extjs.com/products/ux-exception.php
+  
